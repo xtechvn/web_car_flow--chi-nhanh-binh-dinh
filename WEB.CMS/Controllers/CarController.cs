@@ -147,6 +147,10 @@ namespace WEB.CMS.Controllers
                 ViewBag.AllCode = AllCode;
                 var AllCode2 = await _allCodeRepository.GetListSortByName(AllCodeType.LOAD_TYPE);
                 ViewBag.AllCode2 = AllCode2;
+                var AllCode3 = await _allCodeRepository.GetListSortByName(AllCodeType.Loading_Type);
+                ViewBag.AllCode3 = AllCode3;
+                var AllCode4 = await _allCodeRepository.GetListSortByName(AllCodeType.Rank_Type);
+                ViewBag.AllCode4 = AllCode4;
                 var data = await _vehicleInspectionRepository.GetListVehicleProcessingIsLoading(SearchModel);
                 return PartialView(data);
             }
@@ -260,6 +264,8 @@ namespace WEB.CMS.Controllers
                 model.CreatedBy = _UserId;
                 model.ProtectNotes = detail.ProtectNotes;
                 model.TrangThai = detail.TrangThai;
+                model.Rank = detail.Rank;
+                model.RankName = detail.RankName;
                 switch (type)
                 {
                     case 1:
@@ -694,6 +700,24 @@ namespace WEB.CMS.Controllers
                                 var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.Loading_Type);
                                 var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.LoadingType);
                                 detail.LoadingTypeName = allcode_detail == null ? "" : allcode_detail.Description;
+                                // ✅ bắn cả máng cũ + máng mới
+
+                                await _hubContext.Clients.All.SendAsync("ProcessingIsLoading_khoa", detail);
+
+                            }
+                        }
+                        break;
+                    case 11:
+                        {
+
+                            model.Rank = status;
+                            UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+
+                            if (UpdateCar > 0)
+                            {
+                                var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.Rank_Type);
+                                var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.Rank);
+                                detail.RankName = allcode_detail == null ? "" : allcode_detail.Description;
                                 // ✅ bắn cả máng cũ + máng mới
 
                                 await _hubContext.Clients.All.SendAsync("ProcessingIsLoading_khoa", detail);

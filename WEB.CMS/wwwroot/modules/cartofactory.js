@@ -430,13 +430,13 @@
         tbody.insertAdjacentHTML("beforeend", renderRow3(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
-    connection.off("ProcessingIsLoading_khoa");
-    connection.on("ProcessingIsLoading_khoa", function (item) {
-        const tbody = document.getElementById("dataBody-0");
-        $('.CartoFactory_' + item.id).remove();
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
-        sortTable(); // sắp xếp lại ngay khi thêm
-    });
+    //connection.off("ProcessingIsLoading_khoa");
+    //connection.on("ProcessingIsLoading_khoa", function (item) {
+    //    const tbody = document.getElementById("dataBody-0");
+    //    $('.CartoFactory_' + item.id).remove();
+    //    tbody.insertAdjacentHTML("beforeend", renderRow(item));
+    //    sortTable(); // sắp xếp lại ngay khi thêm
+    //});
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);
     });

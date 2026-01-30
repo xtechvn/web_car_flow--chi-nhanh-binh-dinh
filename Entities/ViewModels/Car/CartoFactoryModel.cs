@@ -28,6 +28,7 @@ namespace Entities.ViewModels.Car
         public string TroughTypes { get; set; }
         public decimal? TotalVehicleTroughWeight { get; set; }
         public int totalMinutes { get; set; }
+        public string RankName { get; set; }
 
     }
 }

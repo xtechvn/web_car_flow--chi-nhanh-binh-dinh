@@ -125,6 +125,7 @@ namespace DAL
                     new SqlParameter("@ProcessingIsLoadingDate", (object?)model.ProcessingIsLoadingDate ?? DBNull.Value),
                     new SqlParameter("@ProtectNotes", (object?)model.ProtectNotes ?? DBNull.Value),
                     new SqlParameter("@AudioPath", (object?)model.AudioPath ?? DBNull.Value),
+                    new SqlParameter("@Rank", (object?)model.Rank ?? DBNull.Value),
 
                 };
 

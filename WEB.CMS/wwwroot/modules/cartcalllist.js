@@ -375,7 +375,7 @@
     }
     const connection = new signalR.HubConnectionBuilder()
         .withUrl("/CarHub", { transport: signalR.HttpTransportType.WebSockets, skipNegotiation: true })
-        .withAutomaticReconnect([ 2000, 5000, 10000])
+        .withAutomaticReconnect([2000, 5000, 10000])
         .build();
     connection.start()
         .then(() => console.log("✅ SignalR connected"))
@@ -421,6 +421,18 @@
             String(date.getMonth() + 1).padStart(2, '0') + "/" +
             date.getFullYear();
         var html = ``;
+        var rankIcon = "";
+        switch (item.rank) {
+            case 0:
+                rankIcon = "<img src='~/images/icons/icon-bac.png' class='rank-icon silver' />";
+                break;
+            case 1:
+                rankIcon = "<img src='~/images/icons/icon-vang.png' class='rank-icon gold' />";
+                break;
+            case 2:
+                rankIcon = "<img src='~/images/icons/icon-kim-cuong.png' class='rank-icon diamond' />";
+                break;
+        }
         if (item.listTroughWeight != null) {
             for (var itemTroughWeight = 0; itemTroughWeight < item.listTroughWeight.length; itemTroughWeight++) {
 
@@ -443,7 +455,7 @@
                 html += `
     <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}">
         <td>${item.recordNumber}</td>
-        <td>${item.customerName}</td>
+        <td class="customer-rank">${rankIcon} <span class="rank-text">${item.customerName}</span></td>
         <td>${item.driverName}</td>
         <td><a class="btn-detail"
                            data-id="${item.id}" style="cursor:pointer">${item.vehicleNumber}</a></td>
@@ -475,7 +487,7 @@
         else {
             var html_input = ` <div class="status-dropdown">
            
-                <button class="dropdown-toggle ${isProcessed ? "disabled" : ""}  "CartoFactory_" +${ item.id} + "_troughWeight" : ""}"
+                <button class="dropdown-toggle ${isProcessed ? "disabled" : ""}  "CartoFactory_" +${item.id} + "_troughWeight" : ""}"
                         data-type="1"
                         data-options='${jsonString}'
                         ${isProcessed ? "disabled" : ""}>
@@ -492,7 +504,7 @@
             html += `
     <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}">
         <td>${item.recordNumber}</td>
-        <td>${item.customerName}</td>
+        <td class="customer-rank">${rankIcon} <span class="rank-text">${item.customerName}</span></td>
         <td>${item.driverName}</td>
         <td><a class="btn-detail"
                            data-id="${item.id}" style="cursor:pointer">${item.vehicleNumber}</a></td>
@@ -573,10 +585,22 @@
             String(date.getDate()).padStart(2, '0') + "/" +
             String(date.getMonth() + 1).padStart(2, '0') + "/" +
             date.getFullYear();
+        var rankIcon = "";
+        switch (item.rank) {
+            case 0:
+                rankIcon = "<img src='~/images/icons/icon-bac.png' class='rank-icon silver' />";
+                break;
+            case 1:
+                rankIcon = "<img src='~/images/icons/icon-vang.png' class='rank-icon gold' />";
+                break;
+            case 2:
+                rankIcon = "<img src='~/images/icons/icon-kim-cuong.png' class='rank-icon diamond' />";
+                break;
+        }
         return `
     <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" style="background: antiquewhite;">
         <td>${item.recordNumber}</td>
-        <td>${item.customerName}</td>
+        <td class="customer-rank">${rankIcon} <span class="rank-text">${item.customerName}</span></td>
         <td>${item.driverName}</td>
         <td><a class="btn-detail"
                            data-id="${item.id}" style="cursor:pointer">${item.vehicleNumber}</a></td>
@@ -827,7 +851,7 @@ var _cartcalllist = {
             // 🔎 Kiểm tra xem có xe nào trong máng này chưa hoàn thành không
             let stillHasCar = $("#dataBody-0 tr").toArray().some(tr => {
                 let btnText = $(tr).find("button[data-type='1']").text().replace(/\s+/g, ' ').trim();  // 👈 gộp nhiều space thành 1
-                    
+
                 let trangThai = $(tr).find("td:last .dropdown-toggle").text().trim();
                 return btnText === mangName && trangThai !== "Hoàn thành" && trangThai !== "Bỏ lượt";
             });

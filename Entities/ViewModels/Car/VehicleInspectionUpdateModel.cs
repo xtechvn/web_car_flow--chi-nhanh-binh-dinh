@@ -45,6 +45,8 @@ namespace Entities.ViewModels.Car
         public string? ProtectNotes { get; set; }
         public int TrangThai { get; set; }
         public string? AudioPath { get; set; }
+        public string? RankName { get; set; }
+        public int? Rank { get; set; }
     }
 
 }

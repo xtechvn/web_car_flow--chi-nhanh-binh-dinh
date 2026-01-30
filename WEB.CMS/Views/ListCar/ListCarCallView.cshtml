@@ -39,6 +39,44 @@
     .data-table input {
         width: 80% !important;
     }
+    /* Ô chứa icon + text */
+.customer-rank {
+    display: flex;
+    align-items: center;      /* 👈 canh giữa theo chiều dọc */
+      justify-content: flex-start; /* 👈 DÍNH BÊN TRÁI */
+    gap: 6px;
+    height: 100%;
+}
+
+/* Icon chung */
+.rank-icon {
+    display: block;
+    object-fit: contain;
+}
+
+/* Icon kim cương – cho TO ra */
+.rank-icon.diamond {
+    width: 34px;   /* 👈 tăng size */
+    height: 34px;
+    filter: drop-shadow(0 0 6px rgba(0, 170, 255, 0.7));
+}
+.rank-icon.gold {
+    width: 34px;   /* 👈 tăng size */
+    height: 34px;
+    filter: drop-shadow(0 0 6px rgba(0, 170, 255, 0.7));
+}
+.rank-icon.silver {
+    width: 34px;   /* 👈 tăng size */
+    height: 34px;
+    filter: drop-shadow(0 0 6px rgba(0, 170, 255, 0.7));
+}
+
+/* Text đi kèm */
+.rank-text {
+    font-weight: 600;
+    line-height: 1;  /* 👈 tránh lệch */
+}
+
 </style>
 @if (Model != null && Model.Count > 0)
 {
@@ -66,7 +104,20 @@
                         <tr class="CartoFactory_@item.Id" data-queue="@item.RecordNumber" style="@(item.VehicleTroughStatus == 4 ?"background:antiquewhite;": "" )">
 
                             <td>@item.RecordNumber</td>
-                            <td>@item.CustomerName</td>
+                            <td class="customer-rank">
+                                @switch (item.Rank) {
+                                    case 0:
+                                        <img src='~/images/icons/icon-bac.png' class='rank-icon silver' />
+                                        break;
+                                    case 1:
+                                        <img src='~/images/icons/icon-vang.png' class='rank-icon gold' />
+                                        break;
+                                    case 2:
+                                        <img src='~/images/icons/icon-kim-cuong.png' class='rank-icon diamond' />
+                                        break;
+                                }
+                                <span class="rank-text">@item.CustomerName</span>
+                            </td>
                             <td>@item.DriverName</td>
                             <td>
                                 <a class="btn-detail"

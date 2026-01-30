@@ -150,50 +150,62 @@
 
 
                 var type = $currentBtn.attr('data-type');
-                if (type == '1') {
-                    var vehicleloadtaken = $currentBtn.closest('tr').find('.VehicleLoadTaken').val();
-                    if (vehicleloadtaken != undefined && vehicleloadtaken != "") {
-                        vehicleloadtaken = vehicleloadtaken.replaceAll(",", "")
-
-                    } else {
-                        vehicleloadtaken = 0;
-                    }
-
-                    _processing_is_loading.UpdateStatus(id_row, val_TT, 2, vehicleloadtaken);
-                    $currentBtn
-                        .text(text)
-                        .removeClass(function (_, old) {
-                            return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
-                        }) // xoá các class status- cũ
-                        .addClass(cls); // gắn class mới (status-arrived, status-blank…)
+                // Lấy vehicleloadtaken dùng chung
+                var vehicleloadtaken = $currentBtn.closest('tr').find('.VehicleLoadTaken').val();
+                if (vehicleloadtaken !== undefined && vehicleloadtaken !== "") {
+                    vehicleloadtaken = vehicleloadtaken.replaceAll(",", "");
                 } else {
-                    var vehicleloadtaken = $currentBtn.closest('tr').find('.VehicleLoadTaken').val();
-                    if (vehicleloadtaken != undefined && vehicleloadtaken != "") {
-                        vehicleloadtaken = vehicleloadtaken.replaceAll(",", "")
-                        
-                    } else {
-                        vehicleloadtaken = 0;
-                    }
-                   
-                    var Status_type = _processing_is_loading.UpdateStatus(id_row, val_TT, 8, vehicleloadtaken);
-                    if (Status_type == 0) {
+                    vehicleloadtaken = 0;
+                }
+
+                switch (type) {
+                    case '2':
+                        _processing_is_loading.UpdateStatus(id_row, val_TT, 10, vehicleloadtaken);
                         $currentBtn
                             .text(text)
                             .removeClass(function (_, old) {
                                 return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
-                            }) // xoá các class status- cũ
-                            .addClass(cls); // gắn class mới (status-arrived, status-blank…)
-                        if (val_TT == 1) {
+                            })
+                            .addClass(cls);
+                        break;
 
-                            $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
-                        } else {
-                            $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                    case '3':
+                        _processing_is_loading.UpdateStatus(id_row, val_TT, 11, vehicleloadtaken);
+                        $currentBtn
+                            .text(text)
+                            .removeClass(function (_, old) {
+                                return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
+                            })
+                            .addClass(cls);
+                        break;
 
+                    case '1':
+                        _processing_is_loading.UpdateStatus(id_row, val_TT, 2, vehicleloadtaken);
+                        $currentBtn
+                            .text(text)
+                            .removeClass(function (_, old) {
+                                return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
+                            })
+                            .addClass(cls);
+                        break;
+
+                    default:
+                        var Status_type = _processing_is_loading.UpdateStatus(id_row, val_TT, 8, vehicleloadtaken);
+                        if (Status_type == 0) {
+                            $currentBtn
+                                .text(text)
+                                .removeClass(function (_, old) {
+                                    return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
+                                })
+                                .addClass(cls);
+
+                            if (val_TT == 1) {
+                                $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                            } else {
+                                $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                            }
                         }
-                    }
-
-
-
+                        break;
                 }
 
 
@@ -229,6 +241,16 @@
         { Description: "Blank", CodeValue: "1" },
         { Description: "Hoàn thành", CodeValue: "0" },
     ];
+    const AllCode3 = [
+        { Description: "Chưa dặt hàng", CodeValue: "0" },
+        { Description: "Chưa chuyển tiền", CodeValue: "1" },
+        { Description: "Quá tải", CodeValue: "2" },
+    ];
+    const AllCode4 = [
+        { Description: "Bạc", CodeValue: "0" },
+        { Description: "Vàng", CodeValue: "1" },
+        { Description: "Kim cương", CodeValue: "2" },
+    ];
     // Create a new array of objects in the desired format
     const options = AllCode.map(allcode => ({
         text: allcode.Description,
@@ -239,8 +261,18 @@
         value: allcode2.CodeValue
     }));
 
+    const options3 = AllCode3.map(AllCode3 => ({
+        text: AllCode3.Description,
+        value: AllCode3.CodeValue
+    }));
+    const options4 = AllCode4.map(AllCode4 => ({
+        text: AllCode4.Description,
+        value: AllCode4.CodeValue
+    }));
     const jsonString = JSON.stringify(options);
     const jsonString2 = JSON.stringify(options2);
+    const jsonString3 = JSON.stringify(options3);
+    const jsonString4 = JSON.stringify(options4);
     // Hàm render row
     function renderRow(item) {
         var date = new Date(item.vehicleArrivalDate);
@@ -313,6 +345,22 @@
             </td>
             <td>${item.vehicleWeightMax.toLocaleString('en-US') }</td>
             <td>${html_input} </td>
+              <td>
+                <div class="status-dropdown">
+                    <button class="dropdown-toggle "  data-type="2" data-options='${jsonString3}'>
+                        ${item.loadingTypeName}
+                    </button>
+                </div>
+
+            </td>
+              <td>
+                <div class="status-dropdown">
+                    <button class="dropdown-toggle "  data-type="3" data-options='${jsonString4}'>
+                        ${item.rankName}
+                    </button>
+                </div>
+
+            </td>
             <td>
                 <div class="status-dropdown">
                     <button class="dropdown-toggle "  data-type="1" data-options='${jsonString}'>
@@ -379,7 +427,21 @@
             <td>${item.protectNotes == null ? '' : item.protectNotes}</td>
             <td>${html_tt}</td>
             <td>${item.vehicleWeightMax.toLocaleString('en-US')}</td>
-            <td>${item.vehicleLoadTaken == null ? 0: item.vehicleLoadTaken.toLocaleString('en-US') }</td>
+            <td>${item.vehicleLoadTaken == null ? 0 : item.vehicleLoadTaken.toLocaleString('en-US') }</td>
+            <td>
+                <div class="">
+                    <p class=" " >
+                        ${item.loadingTypeName}
+                    </p>
+                </div>
+            </td>
+            <td>
+               <div class="">
+                    <p class=" " >
+                       ${item.rankName}
+                    </p>
+                </div>
+            </td>
             <td>
                 <div class="">
                     <p class=" " >
@@ -469,7 +531,13 @@
         tbody.insertAdjacentHTML("beforeend", renderRow_DA_SL(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
-
+    connection.off("ProcessingIsLoading_khoa");
+    connection.on("ProcessingIsLoading_khoa", function (item) {
+        const tbody = document.getElementById("dataBody-0");
+        $('.CartoFactory_' + item.id).remove();
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable(); // sắp xếp lại ngay khi thêm
+    });
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);
     });

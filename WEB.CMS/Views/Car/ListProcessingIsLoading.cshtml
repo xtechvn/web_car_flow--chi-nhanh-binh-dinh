@@ -4,6 +4,8 @@
     Layout = null;
     var AllCode = (List<AllCode>)ViewBag.AllCode;
     var AllCode2 = (List<AllCode>)ViewBag.AllCode2;
+    var AllCode3 = (List<AllCode>)ViewBag.AllCode3;
+    var AllCode4 = (List<AllCode>)ViewBag.AllCode4;
 }
 @model List<CartoFactoryModel>
 <style>
@@ -55,6 +57,8 @@
                 <th>TT đăng kiểm</th>
                 <th>Tải trọng xe (kg)</th>
                 <th style="max-width:150px;">TL thực tế (kg)</th>
+                <th>TT Xe</th>
+                <th>KH nội bộ</th>
                 <th>Nhóm tài</th>
                 <th>Tình trạng</th>
             </tr>
@@ -149,6 +153,75 @@
                             </div>
                         }
                     </td>
+                    <td> 
+                        @if (ViewBag.type == 1)
+                        {
+                            <div class="">
+                                <p class="  Vehicle-Status" data-type="2">
+                                    @item.LoadingTypeName
+                                </p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="status-dropdown">
+                                <button class="dropdown-toggle  Vehicle-Status" data-type="2" data-options='[
+                                    @foreach (var allcode in AllCode3)
+                                    {
+                                        if (allcode.CodeValue == 0)
+                                        {
+                                            @:{"text":"@allcode.Description","class":"status-green","value":"@allcode.CodeValue"}@(allcode != AllCode3.Last() ? "," : "")
+
+                                        }
+                                        else
+                                        {
+                                            @:{"text":"@allcode.Description","class":"status-normal","value":"@allcode.CodeValue"}@(allcode != AllCode3.Last() ? "," : "")
+
+                                        }
+
+
+                                    }
+                                ]'>
+                                    @item.LoadingTypeName
+                                </button>
+                            </div>
+                        }
+                        
+                    </td>
+                    <td>
+                        @if (ViewBag.type == 1)
+                        {
+                            <div class="">
+                                <p class="  Vehicle-Status" data-type="3">
+                                    @item.RankName
+                                </p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="status-dropdown">
+                                <button class="dropdown-toggle  Vehicle-Status" data-type="3" data-options='[
+                                    @foreach (var allcode in AllCode4)
+                                    {
+                                        if (allcode.CodeValue == 0)
+                                        {
+                                            @:{"text":"@allcode.Description","class":"status-green","value":"@allcode.CodeValue"}@(allcode != AllCode4.Last() ? "," : "")
+
+                                        }
+                                        else
+                                        {
+                                            @:{"text":"@allcode.Description","class":"status-normal","value":"@allcode.CodeValue"}@(allcode != AllCode4.Last() ? "," : "")
+
+                                        }
+
+
+                                    }
+                                ]'>
+                                    @item.RankName
+                                </button>
+                            </div>
+                        }
+                    </td>
                     <td>
                         @if (ViewBag.type == 1)
                         {
@@ -219,6 +292,8 @@ else
                 <th>TT xe có mặt</th>
                 <th>Tải trọng xe (kg)</th>
                 <th>TL thực tế (kg)</th>
+                <th>TT Xe</th>
+                <th>KH nội bộ</th>
                 <th>Nhóm tài</th>
                 <th>Tình trạng</th>
             </tr>
