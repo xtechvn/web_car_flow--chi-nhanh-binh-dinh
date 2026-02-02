@@ -59,7 +59,7 @@
                             <input type="text" name="name[]" class="name-input" placeholder="Nhập tên khách hàng" required>
 
                             <button type="button" class="btn-remove fa fa-trash-o" onclick="removeRow(this)" style="display:none">
-                               
+                               X
                             </button>
                         </div>
                     </div>
@@ -151,7 +151,7 @@
     <script type="text/javascript" src="~/libs/jquery/jquery-3.6.0.min.js"></script>
     <script>
         // API Configuration
-        const API_BASE_URL = 'https://cargilllongan.com/api'; // Change to your API URL
+        const API_BASE_URL = 'http://qc-longan-fe.cargillhanam.com/api'; // Change to your API URL
         const ENDPOINTS = {
             REGISTER: '/carregistration/registerV2',
             QUEUE_STATUS: '/carregistration/queue-status',
@@ -355,19 +355,20 @@
             isSubmitting = true; // khóa ngay từ đầu
             showLoading(true);
             const rows = document.querySelectorAll('.customer-row');
-             const name = '';
+            var name = '';
 
             rows.forEach((row, index) => {
                 const code = row.querySelector('.code-input').value.trim();
                 const customerName = row.querySelector('.name-input').value.trim();
 
                 if (code && customerName) {
-                    name += `${customerName} - ${code}`;
+                    name += customerName + ' - ' + code;
                     if (index < rows.length - 1) {
-                        name += ' | '; // phân cách nhiều dòng
+                        name += '\r\n'; // phân cách nhiều dòng
                     }
                 }
             });
+            name = name.trim();
             const plateNumber = document.getElementById('plateNumber').value.trim();
             const phoneNumber = document.getElementById('phoneNumber').value.trim();
             const referee = document.getElementById('referee').value.trim();
@@ -653,7 +654,7 @@
         row.innerHTML = `
             <input type="text" name="code[]" class="code-input" placeholder="Nhập mã code" required>
             <input type="text" name="name[]" class="name-input" placeholder="Nhập tên khách hàng" required>
-            <button type="button" class="btn-remove fa fa-trash-o" onclick="removeRow(this)"></button>
+            <button type="button" class="btn-remove fa fa-trash-o" onclick="removeRow(this)">X</button>
         `;
 
         container.appendChild(row);

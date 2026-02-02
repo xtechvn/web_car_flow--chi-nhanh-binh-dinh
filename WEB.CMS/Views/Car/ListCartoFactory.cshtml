@@ -78,7 +78,11 @@
                         <td>@(item.RegisterDateOnline != null ? ((DateTime)item.RegisterDateOnline).ToString("HH:mm dd/MM/yyyy") : "")</td>
                     }
 
-                    <td class="name-td" style="max-width:245Px!important">@item.CustomerName</td>
+                    <td class="name-td" style="max-width:245Px!important">  
+                        <div style="white-space: pre-line;">
+                            @item.CustomerName
+                        </div>
+                    </td>
                     <td>
                         <div>@item.DriverName</div>
                         <div>@item.PhoneNumber</div>

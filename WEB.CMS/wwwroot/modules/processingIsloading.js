@@ -654,6 +654,7 @@ var _processing_is_loading = {
         var id = $('#Id').val();
         var name = $('#CustomerName').val();
         var VehicleNumber = $('#VehicleNumber').val();
+        var status_type = 1;
         $.ajax({
             url: "/Car/UpdateName",
             type: "post",

@@ -252,7 +252,11 @@
         <tr class="CartoFactory_${item.id}" data-queue="${formatted}" >
             <td>${item.recordNumber}</td>
             <td>${formatted}</td>
-            <td class="name-td">${item.customerName}</td>
+            <td class="name-td">
+                <div style="white-space: pre-line;">
+                    ${item.customerName}
+                </div>
+            </td>
             <td>
                 <div>${item.driverName}</div>
                 <div>${item.phoneNumber}</div>
@@ -298,7 +302,11 @@
         <tr class="CartoFactory_${item.id}" data-queue="${item.createTime}" >
             <td>${item.queueNumber}</td>
             <td>${item.createTime}</td>
-            <td class="name-td">${item.name}</td>
+            <td class="name-td">
+               <div style="white-space: pre-line;">
+                    ${item.name}
+                </div>
+                </td>
              <td>
                 <div>${item.gplx}</div>
                 <div>${item.phoneNumber}</div>
@@ -350,7 +358,11 @@
         <tr class="CartoFactory_${item.id}" data-queue="${formatted}" >
             <td>${item.recordNumber}</td>
             <td>${formatted}</td>
-            <td class="name-td">${item.customerName}</td>
+            <td class="name-td">
+                <div style="white-space: pre-line;">
+                      ${item.customerName}
+                </div>
+            </td>
             <td>
                 <div>${item.driverName}</div>
                 <div>${item.phoneNumber}</div>
