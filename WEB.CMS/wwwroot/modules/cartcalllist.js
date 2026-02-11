@@ -424,13 +424,13 @@
         var rankIcon = "";
         switch (item.rank) {
             case 0:
-                rankIcon = "<img src='~/images/icons/icon-bac.png' class='rank-icon silver' />";
+                rankIcon = "<img src='/images/icons/icon-bac.png' class='rank-icon silver' />";
                 break;
             case 1:
-                rankIcon = "<img src='~/images/icons/icon-vang.png' class='rank-icon gold' />";
+                rankIcon = "<img src='/images/icons/icon-vang.png' class='rank-icon gold' />";
                 break;
             case 2:
-                rankIcon = "<img src='~/images/icons/icon-kim-cuong.png' class='rank-icon diamond' />";
+                rankIcon = "<img src='/images/icons/icon-kim-cuong.png' class='rank-icon diamond' />";
                 break;
         }
         if (item.listTroughWeight != null) {
