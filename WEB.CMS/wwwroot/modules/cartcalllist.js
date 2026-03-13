@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+$(document).ready(function () {
     _cartcalllist.init();
     var input_chua_xu_ly = document.getElementById("input_chua_xu_ly");
     input_chua_xu_ly.addEventListener("keypress", function (event) {
@@ -983,6 +983,15 @@ var _cartcalllist = {
 
         // Khởi tạo object lưu text các cột compare của hàng trước
         let prevRowCompareText = {};
+
+        rows.forEach(row => {
+            colIndexes.forEach(colIndex => {
+                if (row.cells[colIndex]) {
+                    row.cells[colIndex].style.display = "";
+                    row.cells[colIndex].rowSpan = 1;
+                }
+            });
+        });
 
         colIndexes.forEach(colIndex => {
             let prevCell = null;

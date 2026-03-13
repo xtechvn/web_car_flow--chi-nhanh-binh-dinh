@@ -1,4 +1,4 @@
-﻿@using Entities.ViewModels.Car;
+@using Entities.ViewModels.Car;
 @using Entities.Models;
 @{
     Layout = null;
@@ -41,16 +41,14 @@
     }
     /* Ô chứa icon + text */
 .customer-rank {
-    display: flex;
-    align-items: center;      /* 👈 canh giữa theo chiều dọc */
-      justify-content: flex-start; /* 👈 DÍNH BÊN TRÁI */
-    gap: 6px;
-    height: 100%;
+    vertical-align: middle;
+    text-align: left;
 }
 
 /* Icon chung */
 .rank-icon {
-    display: block;
+    display: inline-block;
+    vertical-align: middle;
     object-fit: contain;
 }
 
@@ -75,6 +73,9 @@
 .rank-text {
     font-weight: 600;
     line-height: 1;  /* 👈 tránh lệch */
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 2px;
 }
 
 </style>
