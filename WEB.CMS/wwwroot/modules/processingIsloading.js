@@ -236,6 +236,7 @@
     const AllCode = [
         { Description: "Thường", CodeValue: "1" },
         { Description: "Xanh", CodeValue: "0" },
+        { Description: "Đỏ", CodeValue: "2" },
     ];
     const AllCode2 = [
         { Description: "Blank", CodeValue: "1" },
@@ -343,21 +344,14 @@
           
             <td>${item.licenseNumber}</td>
             <td>${item.protectNotes == null ? '' : item.protectNotes}</td>
-            <td> <textarea  class="CS_Note" name="CS_Note" value="${item.cSNotes == null ? '' : item.cSNotes}">${item.cSNotes == null ? '' : item.cSNotes}</textarea>  </td>
+            <td> <textarea  class="CS_Note" name="CS_Note" value="${item.csNotes == null ? '' : item.csNotes}">${item.csNotes == null ? '' : item.csNotes}</textarea>  </td>
             <td>${html_tt}
                 <a class="cursor-pointer" style="margin-left:10px;" onclick="_processing_is_loading.AddOrUpdateNamePopup(${item.id})" title="Chỉnh sửa"><i class="icon-edit"></i>
                 </a>
             </td>
             <td>${item.vehicleWeightMax.toLocaleString('en-US') }</td>
             <td>${html_input} </td>
-              <td>
-                <div class="status-dropdown">
-                    <button class="dropdown-toggle "  data-type="2" data-options='${jsonString3}'>
-                        ${item.loadingTypeName}
-                    </button>
-                </div>
-
-            </td>
+         
               <td>
                   ${item.rankName}
             </td>
@@ -431,17 +425,11 @@
          
             <td>${item.licenseNumber}</td>
             <td>${item.protectNotes == null ? '' : item.protectNotes}</td>
-            <td>${item.cSNotes == null ? '' : item.cSNotes}</td>
+            <td>${item.csNotes == null ? '' : item.csNotes}</td>
             <td>${html_tt}</td>
             <td>${item.vehicleWeightMax.toLocaleString('en-US')}</td>
             <td>${item.vehicleLoadTaken == null ? 0 : item.vehicleLoadTaken.toLocaleString('en-US') }</td>
-            <td>
-                <div class="">
-                    <p class=" " >
-                        ${item.loadingTypeName}
-                    </p>
-                </div>
-            </td>
+          
             <td>
                 ${item.rankName}
             </td>

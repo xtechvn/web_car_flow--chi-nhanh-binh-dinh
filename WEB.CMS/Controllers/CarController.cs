@@ -321,12 +321,12 @@ namespace WEB.CMS.Controllers
                                         model.Rank = (int)RankType.Bac;
                                         break;
                                     }
-                                case 2:
+                                case 0:
                                     {
                                         model.Rank = (int)RankType.Vang;
                                         break;
                                     }
-                                case 3:
+                                case 2:
                                     {
                                         model.Rank = (int)RankType.Kim_Cuong;
                                         break;
@@ -759,7 +759,7 @@ namespace WEB.CMS.Controllers
 
                             if (UpdateCar > 0)
                             {
-
+                                detail.CSNotes = Note;
                                 await _hubContext.Clients.All.SendAsync("ProcessingIsLoading_khoa", detail);
 
                             }
