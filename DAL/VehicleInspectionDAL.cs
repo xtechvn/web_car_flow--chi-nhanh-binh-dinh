@@ -126,6 +126,7 @@ namespace DAL
                     new SqlParameter("@ProtectNotes", (object?)model.ProtectNotes ?? DBNull.Value),
                     new SqlParameter("@AudioPath", (object?)model.AudioPath ?? DBNull.Value),
                     new SqlParameter("@Rank", (object?)model.Rank ?? DBNull.Value),
+                    new SqlParameter("@CSNotes", (object?)model.CSNotes ?? DBNull.Value),
 
                 };
 
@@ -614,6 +615,26 @@ namespace DAL
                 LogHelper.InsertLogTelegram("UpdateVehicleLoadTaken - VehicleInspectionDAL: " + ex);
             }
             return -1;
+        }
+        public async Task<List<CartoFactoryModel>> GetListCartoFactory_EX(CartoFactorySearchModel searchModel)
+        {
+            try
+            {
+                SqlParameter[] objParam = new SqlParameter[]
+                {
+                    new SqlParameter("@RegisterDateOnline", searchModel.RegistrationTime==null? DBNull.Value :searchModel.RegistrationTime),
+                };
+                var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetListCartoFactory_EX, objParam);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return dt.ToList<CartoFactoryModel>();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetListCartoFactory - VehicleInspectionDAL: " + ex);
+            }
+            return null;
         }
     }
 }

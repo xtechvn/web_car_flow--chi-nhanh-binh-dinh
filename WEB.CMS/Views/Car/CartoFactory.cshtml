@@ -1,4 +1,4 @@
-﻿@{
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <main class="main-section">
@@ -11,6 +11,9 @@
             </svg>
         </a>
         <h2 class="table-title">Danh sách xe đăng ký</h2>
+         <a class="btn-search btn-default settings-btn" type="button" onclick="_cartofactory.Export()" id="btnExport" style="height: 38px; display: flex; align-items: center; padding: 0 16px; border-radius: 8px; border: 1px solid #d0d5dd; background: #fff; font-size: 14px; color: #444; margin-right: 15px;">
+               xuất file Excel
+            </a>
         <div class="table-search">
             <input type="text" id="input_chua_xu_ly" placeholder="Tìm kiếm">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">

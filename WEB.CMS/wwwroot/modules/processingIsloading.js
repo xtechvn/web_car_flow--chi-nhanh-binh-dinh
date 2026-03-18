@@ -325,7 +325,11 @@
             <td>${formatted}</td>
             <td>${item.vehicleNumber} ${item.trangThai == 1 || item.trangThai == 2 ? html : ""}</td>
             <td>
-            ${item.customerName} 
+            <div style="display: flex; align-items: center">
+                 <div style="white-space: pre-line;">
+                      ${item.customerName} 
+                 </div>
+            </div>
             <a class="cursor-pointer" style="margin-left:10px;" onclick="_processing_is_loading.AddOrUpdateNamePopup(${item.id})" title="Chỉnh sửa biển số khách hàng">
                                                     <i class="icon-edit"></i>
                                                 </a>
@@ -338,7 +342,8 @@
            
           
             <td>${item.licenseNumber}</td>
-                <td>${item.protectNotes == null ? '' : item.protectNotes}</td>
+            <td>${item.protectNotes == null ? '' : item.protectNotes}</td>
+            <td> <textarea  class="CS_Note" name="CS_Note" value="${item.cSNotes == null ? '' : item.cSNotes}">${item.cSNotes == null ? '' : item.cSNotes}</textarea>  </td>
             <td>${html_tt}
                 <a class="cursor-pointer" style="margin-left:10px;" onclick="_processing_is_loading.AddOrUpdateNamePopup(${item.id})" title="Chỉnh sửa"><i class="icon-edit"></i>
                 </a>
@@ -354,12 +359,7 @@
 
             </td>
               <td>
-                <div class="status-dropdown">
-                    <button class="dropdown-toggle "  data-type="3" data-options='${jsonString4}'>
-                        ${item.rankName}
-                    </button>
-                </div>
-
+                  ${item.rankName}
             </td>
             <td>
                 <div class="status-dropdown">
@@ -416,7 +416,13 @@
             <td>${item.recordNumber}</td>
             <td>${formatted}</td>
             <td>${item.vehicleNumber}</td>
-            <td>${item.customerName}</td>
+            <td>
+            <div style="display: flex; align-items: center">
+                 <div style="white-space: pre-line;">
+                      ${item.customerName} 
+                 </div>
+            </div>
+            </td>
             <td>
                   <div>${item.driverName}</div>
                 <div>${item.phoneNumber}</div>
@@ -425,6 +431,7 @@
          
             <td>${item.licenseNumber}</td>
             <td>${item.protectNotes == null ? '' : item.protectNotes}</td>
+            <td>${item.cSNotes == null ? '' : item.cSNotes}</td>
             <td>${html_tt}</td>
             <td>${item.vehicleWeightMax.toLocaleString('en-US')}</td>
             <td>${item.vehicleLoadTaken == null ? 0 : item.vehicleLoadTaken.toLocaleString('en-US') }</td>
@@ -436,11 +443,7 @@
                 </div>
             </td>
             <td>
-               <div class="">
-                    <p class=" " >
-                       ${item.rankName}
-                    </p>
-                </div>
+                ${item.rankName}
             </td>
             <td>
                 <div class="">
@@ -562,6 +565,30 @@
             vehicleloadtaken = vehicleloadtaken.replaceAll(",","")
         }
         _processing_is_loading.UpdateVehicleLoad(id, vehicleloadtaken)
+    });
+    $(document).on('blur', '.CS_Note', function () {
+        var $textarea = $(this);
+        var note = $textarea.val();
+        var $row = $textarea.closest('tr');
+        var classList = $row.attr('class') || '';
+        var match = classList.match(/CartoFactory_(\d+)/);
+        if (!match) return;
+        var id = match[1];
+        $.ajax({
+            url: "/Car/UpdateStatus",
+            type: "post",
+            data: { id: id, status: 0, type: 12, weight: 0, Note: note },
+            success: function (result) {
+                if (result.status == 0) {
+                    _msgalert.success(result.msg);
+                } else {
+                    _msgalert.error(result.msg);
+                }
+            },
+            error: function () {
+                _msgalert.error("Lỗi kết nối");
+            }
+        });
     });
     function parseDateTime(str) {
         // "11:33 17/12/2025"

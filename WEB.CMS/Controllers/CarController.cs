@@ -1,5 +1,6 @@
 ﻿using Entities.Models;
 using Entities.ViewModels.Car;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Nest;
@@ -23,12 +24,14 @@ namespace WEB.CMS.Controllers
         private readonly IAllCodeRepository _allCodeRepository;
         private readonly IHubContext<CarHub> _hubContext;
         private readonly WorkQueueClient _workQueueClient;
-        public CarController(IVehicleInspectionRepository vehicleInspectionRepository, IAllCodeRepository allCodeRepository, IHubContext<CarHub> hubContext, IConfiguration configuration)
+        private readonly IWebHostEnvironment _WebHostEnvironment;
+        public CarController(IVehicleInspectionRepository vehicleInspectionRepository, IAllCodeRepository allCodeRepository, IHubContext<CarHub> hubContext, IConfiguration configuration, IWebHostEnvironment WebHostEnvironment)
         {
             _vehicleInspectionRepository = vehicleInspectionRepository;
             _allCodeRepository = allCodeRepository;
             _hubContext = hubContext;
             _workQueueClient = new WorkQueueClient(configuration);
+            _WebHostEnvironment = WebHostEnvironment;
         }
         public IActionResult CartoFactory()
         {
@@ -266,6 +269,7 @@ namespace WEB.CMS.Controllers
                 model.TrangThai = detail.TrangThai;
                 model.Rank = detail.Rank;
                 model.RankName = detail.RankName;
+                model.CSNotes = detail.CSNotes;
                 switch (type)
                 {
                     case 1:
@@ -310,6 +314,24 @@ namespace WEB.CMS.Controllers
                         break;
                     case 2:
                         {
+                            switch (status)
+                            {
+                                case 1:
+                                    {
+                                        model.Rank = (int)RankType.Bac;
+                                        break;
+                                    }
+                                case 2:
+                                    {
+                                        model.Rank = (int)RankType.Vang;
+                                        break;
+                                    }
+                                case 3:
+                                    {
+                                        model.Rank = (int)RankType.Kim_Cuong;
+                                        break;
+                                    }
+                            }
                             if (weight > 0)
                             {
                                 var update = await _vehicleInspectionRepository.UpdateVehicleLoadTaken(id, weight);
@@ -320,6 +342,10 @@ namespace WEB.CMS.Controllers
                             var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == status);
                             detail.LoadTypeName = allcode_detail.Description;
                             detail.VehicleLoadTaken = weight;
+                            var allcode_Rank = await _allCodeRepository.GetListSortByName(AllCodeType.Rank_Type);
+                            var allcode_Rank_detail = allcode_Rank.FirstOrDefault(s => s.CodeValue == model.Rank);
+                            detail.RankName = allcode_Rank_detail == null ? "" : allcode_Rank_detail.Description;
+
                             await _hubContext.Clients.All.SendAsync("ListProcessingIsLoading", detail);
 
                         }
@@ -725,6 +751,20 @@ namespace WEB.CMS.Controllers
                             }
                         }
                         break;
+                    case 12:
+                        {
+
+                            model.CSNotes = Note;
+                            UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+
+                            if (UpdateCar > 0)
+                            {
+
+                                await _hubContext.Clients.All.SendAsync("ProcessingIsLoading_khoa", detail);
+
+                            }
+                        }
+                        break;
                 }
                 if (UpdateCar > 0)
                     return Ok(new
@@ -1014,6 +1054,69 @@ namespace WEB.CMS.Controllers
                 return PartialView();
             }
             return PartialView();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ExportExcel()
+        {
+            try
+            {
+                var SearchModel=new CartoFactorySearchModel();
+                int _UserId = 0;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+                string _FileName = StringHelpers.GenFileName("Danh sách đơn hàng", _UserId, "xlsx");
+                string _UploadFolder = @"Template\Export";
+                string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, _UploadFolder);
+
+                if (!Directory.Exists(_UploadDirectory))
+                {
+                    Directory.CreateDirectory(_UploadDirectory);
+                }
+                //delete all file in folder before export
+                try
+                {
+                    System.IO.DirectoryInfo di = new DirectoryInfo(_UploadDirectory);
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                }
+                catch
+                {
+                }
+                string FilePath = Path.Combine(_UploadDirectory, _FileName);
+
+                var rsPath = await _vehicleInspectionRepository.ExportDeposit(SearchModel, FilePath);
+
+                if (!string.IsNullOrEmpty(rsPath))
+                {
+                    return new JsonResult(new
+                    {
+                        isSuccess = true,
+                        message = "Xuất dữ liệu thành công",
+                        path = "/" + _UploadFolder + "/" + _FileName
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        isSuccess = false,
+                        message = "Xuất dữ liệu thất bại"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("ExportExcel - OrderController: " + ex);
+                return new JsonResult(new
+                {
+                    isSuccess = false,
+                    message = ex.Message.ToString()
+                });
+            }
         }
     }
 }

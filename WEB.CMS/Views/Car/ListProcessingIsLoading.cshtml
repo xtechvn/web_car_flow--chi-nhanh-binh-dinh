@@ -49,11 +49,12 @@
                 <th>STT</th>
                 <th>Giờ xe đến</th>
                 <th>Biển số xe</th>
-                <th>Tên khách hàng (Trại, đại lý)</th>
+                <th style="min-width:250px;">Tên khách hàng (Trại, đại lý)</th>
                 <th>Tên lái xe</th>
 
-                <th>Ghi chú</th>
+                <th>KH Ghi chú</th>
                 <th>BV ghi chú</th>
+                <th>CS ghi chú</th>
                 <th>TT đăng kiểm</th>
                 <th>Tải trọng xe (kg)</th>
                 <th style="max-width:150px;">TL thực tế (kg)</th>
@@ -104,6 +105,18 @@
                     </td>
                     <td>@item.LicenseNumber</td>
                     <td>@item.ProtectNotes</td>
+                    <td>
+                     @if(ViewBag.type == 0){
+                      <textarea  class="CS_Note" name="CS_Note" value="@item.CSNotes">@item.CSNotes</textarea>  
+                     }else{
+                          <div style="display: flex; align-items: center">
+                            <div style="white-space: pre-line;">
+                             @item.CSNotes
+                            </div>                      
+                        </div> 
+                     }
+                    
+                    </td>
                     <td>
                         @{
                             switch (item.TrangThai)
@@ -189,38 +202,7 @@
                         
                     </td>
                     <td>
-                        @if (ViewBag.type == 1)
-                        {
-                            <div class="">
-                                <p class="  Vehicle-Status" data-type="3">
-                                    @item.RankName
-                                </p>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="status-dropdown">
-                                <button class="dropdown-toggle  Vehicle-Status" data-type="3" data-options='[
-                                    @foreach (var allcode in AllCode4)
-                                    {
-                                        if (allcode.CodeValue == 0)
-                                        {
-                                            @:{"text":"@allcode.Description","class":"status-green","value":"@allcode.CodeValue"}@(allcode != AllCode4.Last() ? "," : "")
-
-                                        }
-                                        else
-                                        {
-                                            @:{"text":"@allcode.Description","class":"status-normal","value":"@allcode.CodeValue"}@(allcode != AllCode4.Last() ? "," : "")
-
-                                        }
-
-
-                                    }
-                                ]'>
-                                    @item.RankName
-                                </button>
-                            </div>
-                        }
+                         @item.RankName
                     </td>
                     <td>
                         @if (ViewBag.type == 1)
@@ -287,11 +269,13 @@ else
                 <th>Biển số xe</th>
                 <th>Tên khách hàng (Trại, đại lý)</th>
                 <th>Tên lái xe</th>
-                <th>Số điện thoại</th>
-                <th>Ghi chú</th>
-                <th>TT xe có mặt</th>
+
+                <th>KH Ghi chú</th>
+                <th>BV ghi chú</th>
+                <th>CS ghi chú</th>
+                <th>TT đăng kiểm</th>
                 <th>Tải trọng xe (kg)</th>
-                <th>TL thực tế (kg)</th>
+                <th style="max-width:150px;">TL thực tế (kg)</th>
                 <th>TT Xe</th>
                 <th>KH nội bộ</th>
                 <th>Nhóm tài</th>

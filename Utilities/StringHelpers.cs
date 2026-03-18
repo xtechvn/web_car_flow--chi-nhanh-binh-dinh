@@ -279,7 +279,7 @@ namespace Utilities
          
         public static string GenFileName(string base_name, int user_id,string extension)
         {
-            return base_name + "_" + user_id + "_" + DateTime.Now.ToString("yyyyMMddhhmmss") + "." + extension;
+            return base_name + "_" + user_id + "_" + DateTime.Now.ToString("yyyyMMdd") + "." + extension;
         }
        
 

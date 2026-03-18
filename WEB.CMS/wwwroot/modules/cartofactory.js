@@ -557,5 +557,26 @@ var _cartofactory = {
         });
         return status_type;
     },
-
+    Export: function () {
+        $('#btnExport').prop('disabled', true);
+       
+        _global_function.AddLoading()
+        $.ajax({
+            url: "/Car/ExportExcel",
+            type: "Post",
+            data: {},
+            success: function (result) {
+                _global_function.RemoveLoading()
+                $('#btnExport').prop('disabled', false);
+                if (result.isSuccess) {
+                    _msgalert.success(result.message);
+                    window.location.href = result.path;
+                } else {
+                    _msgalert.error(result.message);
+                }
+                $('#icon-export').removeClass('fa-spinner fa-pulse');
+                $('#icon-export').addClass('fa-file-excel-o');
+            }
+        });
+    },
 }
