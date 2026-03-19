@@ -65,53 +65,53 @@ $(document).ready(function () {
         $('<button class="cancel">Bỏ qua</button>').appendTo($actions);
         $('<button class="confirm">Xác nhận</button>').appendTo($actions);
         $menu.append($actions);
-        container.append($menu);
+        
+        // 🔧 Đính kèm thẳng vào .status-dropdown (đảm bảo bám dính khi scroll)
+        const $parent = $btn.closest('.status-dropdown');
+        $parent.css('position', 'relative');
+        $parent.append($menu);
 
-        // Tính toán vị trí
-
-        // --- 🔧 Tính toán vị trí dropdown (dùng viewport coords) ---
-        const rect = $btn[0].getBoundingClientRect(); // viewport coordinates
-        const btnHeight = rect.height;
-        const winWidth = $(window).width();
+        // --- Tính toán hiển thị lên trên hay dưới ---
+        const rect = $btn[0].getBoundingClientRect();
+        const btnHeight = $btn.outerHeight();
         const winHeight = $(window).height();
-        const paddingScreen = 15; // chừa khoảng 15px mỗi bên
+        
         $menu.css({
-            position: 'fixed',
+            position: 'absolute',
             left: 0,
-            top: 0,
             display: 'block',
-            visibility: 'hidden'
+            visibility: 'hidden',
+            zIndex: 99999
         });
 
-        const menuWidth = $menu.outerWidth();
         const menuHeight = $menu.outerHeight();
+        const menuWidth = $menu.outerWidth();
+        const paddingScreen = 15;
+        const winWidth = $(window).width();
 
-        // Vị trí mặc định: bên dưới button (viewport coords)
-        let viewportLeft = rect.left;
-        let viewportTop = rect.top + btnHeight;
+        let cssTop = '100%';
+        let cssBottom = 'auto';
+        let cssLeft = 0;
 
         // Nếu dropdown tràn phải -> dịch sang trái
-        if (viewportLeft + menuWidth + paddingScreen > winWidth) {
-            viewportLeft = winWidth - menuWidth - paddingScreen;
+        if (rect.left + menuWidth + paddingScreen > winWidth) {
+            cssLeft = $btn.outerWidth() - menuWidth;
         }
 
-        // Nếu tràn trái -> giữ cách paddingScreen
-        if (viewportLeft < paddingScreen) {
-            viewportLeft = paddingScreen;
-        }
-
-        // Nếu tràn dưới -> bật drop-up (hiển thị phía trên button)
-        if (viewportTop + menuHeight > winHeight) {
-            viewportTop = rect.top - menuHeight;
+        // Nếu tràn dưới -> bật drop-up
+        if (rect.top + btnHeight + menuHeight + paddingScreen > winHeight) {
+            cssTop = 'auto';
+            cssBottom = '100%';
             $menu.addClass('drop-up');
         } else {
             $menu.removeClass('drop-up');
         }
 
-        // Áp vị trí cuối cùng kèm theo scroll offset và hiển thị menu
+        // Áp vị trí cuối cùng
         $menu.css({
-            left: viewportLeft,
-            top: viewportTop,
+            top: cssTop,
+            bottom: cssBottom,
+            left: cssLeft,
             visibility: 'visible' // hiện lên
         });
     });
