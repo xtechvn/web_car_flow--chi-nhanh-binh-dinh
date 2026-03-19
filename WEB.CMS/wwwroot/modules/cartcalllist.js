@@ -26,29 +26,26 @@ $(document).ready(function () {
     input_da_xu_ly.addEventListener("keyup", function (event) {
         _cartcalllist.ListCartoFactory_Da_SL();
     });
-    const container = $('<div id="dropdown-container"></div>').appendTo('body');
     let $menu = null;
     let $currentBtn = null;
+
+    // 🕵️ Lắng nghe sự kiện toàn cục để đóng menu khi cần
+    $(window).on('resize.dropdown', function () {
+        if ($menu) closeMenu();
+    });
+
     $(document).on('click', '.status-dropdown .dropdown-toggle', function (e) {
         e.stopPropagation();
         const $btn = $(this);
-        // 🚫 Nếu button đã disabled thì thoát luôn
-        if ($btn.hasClass("disabled") || $btn.is(":disabled")) {
-            return;
-        }
-        const optsData = $btn.data('options'); // mảng [{text, class}]
+        if ($btn.hasClass("disabled") || $btn.is(":disabled")) return;
+
+        const optsData = $btn.data('options');
         const options = Array.isArray(optsData) ? optsData : JSON.parse(optsData);
         const currentText = $.trim($btn.text());
 
-        // Đóng menu cũ (nếu có)
-        if ($menu) {
-            $menu.remove();
-            $menu = null;
-        }
-
+        if ($menu) closeMenu();
         $currentBtn = $btn;
 
-        // Tạo menu + danh sách li
         $menu = $('<div class="dropdown-menu"><ul></ul></div>');
         const $ul = $menu.find('ul');
 
@@ -56,7 +53,7 @@ $(document).ready(function () {
             $('<li>')
                 .text(opt.text)
                 .addClass('status-option')
-                .attr('data-value', opt.value) // Corrected from opt.valuse
+                .attr('data-value', opt.value)
                 .toggleClass('active', opt.text === currentText)
                 .appendTo($ul);
         });
@@ -66,73 +63,72 @@ $(document).ready(function () {
         $('<button class="confirm">Xác nhận</button>').appendTo($actions);
         $menu.append($actions);
         
-        // 🔧 Đính kèm thẳng vào .status-dropdown (đảm bảo bám dính khi scroll)
-        const $parent = $btn.closest('.status-dropdown');
-        $parent.css('position', 'relative');
-        $parent.append($menu);
-
-        // --- Tính toán hiển thị lên trên hay dưới ---
-        const rect = $btn[0].getBoundingClientRect();
-        const btnHeight = $btn.outerHeight();
-        const winHeight = $(window).height();
-        
+        // --- 🔧 Tính toán vị trí Absolute Portal ---
         $menu.css({
             position: 'absolute',
-            left: 0,
             display: 'block',
             visibility: 'hidden',
-            zIndex: 99999
-        });
+            zIndex: 999999
+        }).appendTo('body');
 
-        const menuHeight = $menu.outerHeight();
+        const offset = $btn.offset();
+        const btnHeight = $btn.outerHeight();
+        const menuHeight = $menu.outerHeight() || 250;
         const menuWidth = $menu.outerWidth();
-        const paddingScreen = 15;
+        const winHeight = $(window).height();
+        const scrollByWindow = $(window).scrollTop();
         const winWidth = $(window).width();
+        const paddingScreen = 20;
 
-        let cssTop = '100%';
-        let cssBottom = 'auto';
-        let cssLeft = 0;
+        let cssTop = offset.top + btnHeight;
+        let cssLeft = offset.left;
 
-        // Nếu dropdown tràn phải -> dịch sang trái
-        if (rect.left + menuWidth + paddingScreen > winWidth) {
-            cssLeft = $btn.outerWidth() - menuWidth;
+        if (offset.left + menuWidth + paddingScreen > winWidth) {
+            cssLeft = offset.left + $btn.outerWidth() - menuWidth;
         }
 
-        // Nếu tràn dưới -> bật drop-up
-        if (rect.top + btnHeight + menuHeight + paddingScreen > winHeight) {
-            cssTop = 'auto';
-            cssBottom = '100%';
+        // Tọa độ tương đối so với viewport để tính Drop-up
+        const rectTop = offset.top - scrollByWindow;
+        const spaceBelow = winHeight - (rectTop + btnHeight);
+        const spaceAbove = rectTop;
+
+        if (spaceBelow < menuHeight + paddingScreen && spaceAbove > spaceBelow) {
+            cssTop = offset.top - menuHeight;
             $menu.addClass('drop-up');
         } else {
             $menu.removeClass('drop-up');
         }
 
-        // Áp vị trí cuối cùng
         $menu.css({
             top: cssTop,
-            bottom: cssBottom,
             left: cssLeft,
-            visibility: 'visible' // hiện lên
+            visibility: 'visible' 
+        });
+
+        // 🕵️ Lắng nghe cuộn từ tất cả các thẻ cha để đóng menu ngay khi cuộn
+        $btn.parents().on('scroll.dropdown', function () {
+            closeMenu();
+        });
+        $(window).on('scroll.dropdown', function () {
+            closeMenu();
         });
     });
 
     // Click chọn item
-    $(document).on('click', '#dropdown-container .dropdown-menu li', function (e) {
+    $(document).on('click', '.dropdown-menu li', function (e) {
         e.stopPropagation();
-        $('#dropdown-container .dropdown-menu li').removeClass('active');
+        $(this).closest('ul').find('li').removeClass('active');
         $(this).addClass('active');
     });
 
     // Bỏ qua
-    $(document).on('click', '#dropdown-container .actions .cancel', function (e) {
+    $(document).on('click', '.dropdown-menu .actions .cancel', function (e) {
         e.stopPropagation();
         closeMenu();
     });
 
     // ✅ Xác nhận – đổi text + class cho button
-    // Khi chọn máng xuất trong dropdown (type=1)
-    // ✅ Xác nhận – đổi text + class cho button
-    $(document).on('click', '#dropdown-container .actions .confirm', async function (e) {
+    $(document).on('click', '.dropdown-menu .actions .confirm', async function (e) {
         e.stopPropagation();
 
         if ($menu && $currentBtn) {
@@ -191,14 +187,6 @@ $(document).ready(function () {
                         }
 
                     });
-                    //if (status_type == 0) {
-                    //    $currentBtn
-                    //        .text(text)
-                    //        .removeClass(function (_, old) {
-                    //            return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
-                    //        })
-                    //        .addClass($active.attr('class').split(/\s+/).filter(c => c !== 'active')[0] || '');
-                    //}
 
                 } else {
                     var weight = $('.CartoFactory_' + id_row).find('input.weight').val() != undefined ? $('.CartoFactory_' + id_row).find('input.weight').val().replaceAll(",", "") : 0;
@@ -289,15 +277,6 @@ $(document).ready(function () {
 
                     });
 
-                    //if (status_type == 0) {
-                    //    $currentBtn
-                    //        .text(text)
-                    //        .removeClass(function (_, old) {
-                    //            return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
-                    //        })
-                    //        .addClass($active.attr('class').split(/\s+/).filter(c => c !== 'active')[0] || '');
-                    //}
-
                     // ✅ xử lý máng trống / đang xử lý
                     if (val_TT == 0) {
                         let mangName = $row.find('button[data-type="1"]').text().trim();
@@ -356,7 +335,7 @@ $(document).ready(function () {
     });
 
     // 🚫 Chặn đóng menu khi click vào input phụ
-    $(document).on('click', '#dropdown-container .extra-weight input', function (e) {
+    $(document).on('click', '.dropdown-menu .extra-weight input', function (e) {
         e.stopPropagation();
     });
 
@@ -370,6 +349,8 @@ $(document).ready(function () {
         if ($menu) {
             $menu.remove();
             $menu = null;
+            if ($currentBtn) $currentBtn.parents().off('scroll.dropdown');
+            $(window).off('scroll.dropdown');
             $currentBtn = null;
         }
     }

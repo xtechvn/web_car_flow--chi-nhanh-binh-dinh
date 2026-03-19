@@ -5,26 +5,26 @@ $(document).ready(function () {
     });
     _registeredvehicle.loaddata()
 
-    const container = $('<div id="dropdown-container"></div>').appendTo('body');
     let $menu = null;
     let $currentBtn = null;
+
+    // 🕵️ Lắng nghe sự kiện toàn cục để đóng menu khi cần
+    $(window).on('resize.dropdown', function () {
+        if ($menu) closeMenu();
+    });
 
     $(document).on('click', '.status-dropdown .dropdown-toggle', function (e) {
         e.stopPropagation();
         const $btn = $(this);
-        const optsData = $btn.data('options'); // mảng [{text, class}]
+        if ($btn.hasClass("disabled") || $btn.is(":disabled")) return;
+
+        const optsData = $btn.data('options');
         const options = Array.isArray(optsData) ? optsData : JSON.parse(optsData);
         const currentText = $.trim($btn.text());
 
-        // Đóng menu cũ (nếu có)
-        if ($menu) {
-            $menu.remove();
-            $menu = null;
-        }
-
+        if ($menu) closeMenu();
         $currentBtn = $btn;
 
-        // Tạo menu + danh sách li
         $menu = $('<div class="dropdown-menu"><ul></ul></div>');
         const $ul = $menu.find('ul');
 
@@ -32,7 +32,7 @@ $(document).ready(function () {
             $('<li>')
                 .text(opt.text)
                 .addClass('status-option')
-                .attr('data-value', opt.value) // Corrected from opt.valuse
+                .attr('data-value', opt.value)
                 .toggleClass('active', opt.text === currentText)
                 .appendTo($ul);
         });
@@ -41,70 +41,70 @@ $(document).ready(function () {
         $('<button class="cancel">Bỏ qua</button>').appendTo($actions);
         $('<button class="confirm">Xác nhận</button>').appendTo($actions);
         $menu.append($actions);
-        container.append($menu);
-
-        // --- 🔧 Tính toán vị trí dropdown (dùng viewport coords) ---
-        const rect = $btn[0].getBoundingClientRect(); // viewport coordinates
-        const btnHeight = rect.height;
-        const winWidth = $(window).width();
-        const winHeight = $(window).height();
-        const paddingScreen = 15; // chừa khoảng 15px mỗi bên
+        
+        // --- 🔧 Tính toán vị trí Absolute Portal ---
         $menu.css({
-            position: 'fixed',
-            left: 0,
-            top: 0,
+            position: 'absolute',
             display: 'block',
-            visibility: 'hidden'
-        });
+            visibility: 'hidden',
+            zIndex: 999999
+        }).appendTo('body');
 
+        const offset = $btn.offset();
+        const btnHeight = $btn.outerHeight();
+        const menuHeight = $menu.outerHeight() || 250;
         const menuWidth = $menu.outerWidth();
-        const menuHeight = $menu.outerHeight();
+        const winHeight = $(window).height();
+        const scrollByWindow = $(window).scrollTop();
+        const winWidth = $(window).width();
+        const paddingScreen = 20;
 
-        // Vị trí mặc định: bên dưới button (viewport coords)
-        let viewportLeft = rect.left;
-        let viewportTop = rect.top + btnHeight;
+        let cssTop = offset.top + btnHeight;
+        let cssLeft = offset.left;
 
-        // Nếu dropdown tràn phải -> dịch sang trái
-        if (viewportLeft + menuWidth + paddingScreen > winWidth) {
-            viewportLeft = winWidth - menuWidth - paddingScreen;
+        if (offset.left + menuWidth + paddingScreen > winWidth) {
+            cssLeft = offset.left + $btn.outerWidth() - menuWidth;
         }
 
-        // Nếu tràn trái -> giữ cách paddingScreen
-        if (viewportLeft < paddingScreen) {
-            viewportLeft = paddingScreen;
-        }
+        // Tọa độ tương đối so với viewport để tính Drop-up
+        const rectTop = offset.top - scrollByWindow;
+        const spaceBelow = winHeight - (rectTop + btnHeight);
+        const spaceAbove = rectTop;
 
-        // Nếu tràn dưới -> bật drop-up (hiển thị phía trên button)
-        if (viewportTop + menuHeight > winHeight) {
-            viewportTop = rect.top - menuHeight;
+        if (spaceBelow < menuHeight + paddingScreen && spaceAbove > spaceBelow) {
+            cssTop = offset.top - menuHeight;
             $menu.addClass('drop-up');
         } else {
             $menu.removeClass('drop-up');
         }
 
-        // Áp vị trí cuối cùng kèm theo scroll offset và hiển thị menu
         $menu.css({
-            left: viewportLeft,
-            top: viewportTop,
-            visibility: 'visible' // hiện lên
+            top: cssTop,
+            left: cssLeft,
+            visibility: 'visible' 
+        });
+
+        // 🕵️ Lắng nghe cuộn từ tất cả các thẻ cha để đóng menu ngay khi cuộn
+        $btn.parents().on('scroll.dropdown', function () {
+            closeMenu();
+        });
+        $(window).on('scroll.dropdown', function () {
+            closeMenu();
         });
     });
 
-    // Click chọn item
-    $(document).on('click', '#dropdown-container .dropdown-menu li', function (e) {
+    $(document).on('click', '.dropdown-menu li', function (e) {
         e.stopPropagation();
-        $('#dropdown-container .dropdown-menu li').removeClass('active');
+        $(this).closest('ul').find('li').removeClass('active');
         $(this).addClass('active');
     });
 
-    // Bỏ qua
-    $(document).on('click', '#dropdown-container .actions .cancel', function (e) {
+    $(document).on('click', '.dropdown-menu .actions .cancel', function (e) {
         e.stopPropagation();
         closeMenu();
     });
 
-    // ✅ Xác nhận – đổi text + class cho button
-    $(document).on('click', '#dropdown-container .actions .confirm', function (e) {
+    $(document).on('click', '.dropdown-menu .actions .confirm', function (e) {
         e.stopPropagation();
         if ($menu && $currentBtn) {
             const $active = $menu.find('li.active');
@@ -160,6 +160,8 @@ $(document).ready(function () {
         if ($menu) {
             $menu.remove();
             $menu = null;
+            if ($currentBtn) $currentBtn.parents().off('scroll.dropdown');
+            $(window).off('scroll.dropdown');
             $currentBtn = null;
         }
     }
