@@ -56,10 +56,10 @@ $(document).ready(function () {
             <td> ${item.csNotes == null ? '' : item.csNotes} </td>
            <td>${html_tt}</td>
               <td>
-                  ${item.rankName}
+                  ${item.rankName == null ? '' : item.rankName}
             </td>
             <td>
-                 ${item.loadTypeName}
+                 ${item.loadTypeName == null ? '' : item.loadTypeName}
             </td>
 
 
@@ -90,13 +90,7 @@ $(document).ready(function () {
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
-    //lấy từ ds xe đến nhà máy
-    connection.off("Listwaiting_room_Da_SL");
-    connection.on("Listwaiting_room_Da_SL", function (item) {
-        const tbody = document.getElementById("dataBody-0");
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
-        sortTable(); // sắp xếp lại ngay khi thêm
-    });
+  
     connection.off("ListCartoFactory");
     connection.on("ListCartoFactory", function (item) {
         $('#dataBody-0').find('.waiting_room_' + item.id).remove();
@@ -112,6 +106,17 @@ $(document).ready(function () {
         $('.waiting_room_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
+    });
+    //lấy từ ds xe đến nhà máy
+    connection.off("ListCartoFactory_Da_SL");
+    connection.on("ListCartoFactory_Da_SL", function (item) {
+        const tbody = document.getElementById("dataBody-0");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
+    connection.off("ListCartoFactory");
+    connection.on("ListCartoFactory", function (item) {
+        $('#dataBody-0').find('.waiting_room_' + item.id).remove();
     });
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);

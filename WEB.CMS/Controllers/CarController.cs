@@ -386,7 +386,7 @@ namespace WEB.CMS.Controllers
                                 }
                                 else
                                 {
-                                    if (detail.LoadType == (int)LoadType.Xanh)
+                                    if (detail.LoadType == (int)LoadType.Xanh|| detail.LoadType == (int)LoadType.Do)
                                     {
                                         await _hubContext.Clients.All.SendAsync("ListCallTheScale_0", detail);
                                     }

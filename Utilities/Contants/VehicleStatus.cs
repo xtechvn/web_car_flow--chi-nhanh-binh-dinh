@@ -14,6 +14,7 @@
     {
         Xanh = 0,
         Thuuong = 1,
+        Do = 2,
     } 
     public enum LoadingStatus
     {
