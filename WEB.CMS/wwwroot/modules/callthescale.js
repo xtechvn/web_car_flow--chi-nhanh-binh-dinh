@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+$(document).ready(function () {
     _Call_The_Scale.init();
    
     $(document).on('click', '.open-audio', function (e) {
@@ -122,7 +122,7 @@
         const winHeight = $(window).height();
         const paddingScreen = 15; // chừa khoảng 15px mỗi bên
         $menu.css({
-            position: 'absolute',
+            position: 'fixed',
             left: 0,
             top: 0,
             display: 'block',
@@ -133,31 +133,31 @@
         const menuHeight = $menu.outerHeight();
 
         // Vị trí mặc định: bên dưới button (viewport coords)
-        let left = rect.left;
-        let top = rect.top + btnHeight;
+        let viewportLeft = rect.left;
+        let viewportTop = rect.top + btnHeight;
 
         // Nếu dropdown tràn phải -> dịch sang trái
-        if (left + menuWidth + paddingScreen > winWidth) {
-            left = winWidth - menuWidth - paddingScreen;
+        if (viewportLeft + menuWidth + paddingScreen > winWidth) {
+            viewportLeft = winWidth - menuWidth - paddingScreen;
         }
 
         // Nếu tràn trái -> giữ cách paddingScreen
-        if (left < paddingScreen) {
-            left = paddingScreen;
+        if (viewportLeft < paddingScreen) {
+            viewportLeft = paddingScreen;
         }
 
         // Nếu tràn dưới -> bật drop-up (hiển thị phía trên button)
-        if (top + menuHeight > winHeight) {
-            top = rect.top - menuHeight;
+        if (viewportTop + menuHeight > winHeight) {
+            viewportTop = rect.top - menuHeight;
             $menu.addClass('drop-up');
         } else {
             $menu.removeClass('drop-up');
         }
 
-        // Áp vị trí cuối cùng và hiển thị menu
+        // Áp vị trí cuối cùng kèm theo scroll offset và hiển thị menu
         $menu.css({
-            left: left,
-            top: top,
+            left: viewportLeft,
+            top: viewportTop,
             visibility: 'visible' // hiện lên
         });
     });

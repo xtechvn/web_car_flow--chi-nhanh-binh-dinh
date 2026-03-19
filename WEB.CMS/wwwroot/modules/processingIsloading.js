@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+$(document).ready(function () {
     _processing_is_loading.init();
     var input_Processing_Is_Loading_Chua_SL = document.getElementById("input_Processing_Is_Loading_Chua_SL");
     input_Processing_Is_Loading_Chua_SL.addEventListener("keypress", function (event) {
@@ -73,7 +73,7 @@
         const winHeight = $(window).height();
         const paddingScreen = 15; // chừa khoảng 15px mỗi bên
         $menu.css({
-            position: 'absolute',
+            position: 'fixed',
             left: 0,
             top: 0,
             display: 'block',
@@ -84,31 +84,31 @@
         const menuHeight = $menu.outerHeight();
 
         // Vị trí mặc định: bên dưới button (viewport coords)
-        let left = rect.left;
-        let top = rect.top + btnHeight;
+        let viewportLeft = rect.left;
+        let viewportTop = rect.top + btnHeight;
 
         // Nếu dropdown tràn phải -> dịch sang trái
-        if (left + menuWidth + paddingScreen > winWidth) {
-            left = winWidth - menuWidth - paddingScreen;
+        if (viewportLeft + menuWidth + paddingScreen > winWidth) {
+            viewportLeft = winWidth - menuWidth - paddingScreen;
         }
 
         // Nếu tràn trái -> giữ cách paddingScreen
-        if (left < paddingScreen) {
-            left = paddingScreen;
+        if (viewportLeft < paddingScreen) {
+            viewportLeft = paddingScreen;
         }
 
         // Nếu tràn dưới -> bật drop-up (hiển thị phía trên button)
-        if (top + menuHeight > winHeight) {
-            top = rect.top - menuHeight;
+        if (viewportTop + menuHeight > winHeight) {
+            viewportTop = rect.top - menuHeight;
             $menu.addClass('drop-up');
         } else {
             $menu.removeClass('drop-up');
         }
 
-        // Áp vị trí cuối cùng và hiển thị menu
+        // Áp vị trí cuối cùng kèm theo scroll offset và hiển thị menu
         $menu.css({
-            left: left,
-            top: top,
+            left: viewportLeft,
+            top: viewportTop,
             visibility: 'visible' // hiện lên
         });
     });
@@ -353,12 +353,12 @@
             <td>${html_input} </td>
          
               <td>
-                  ${item.rankName}
+                  ${item.rankName == null ? '' : item.rankName}
             </td>
             <td>
                 <div class="status-dropdown">
                     <button class="dropdown-toggle "  data-type="1" data-options='${jsonString}'>
-                        ${item.loadTypeName}
+                        ${item.loadTypeName == null ? '' : item.loadTypeName}
                     </button>
                 </div>
 
@@ -366,7 +366,7 @@
             <td>
                 <div class="status-dropdown">
                     <button class="dropdown-toggle " data-options='${jsonString2}'>
-                        ${item.loadingStatusName}
+                        ${item.loadingStatusName == null ? '' : item.loadingStatusName}
                     </button>
                 </div>
 
@@ -431,12 +431,12 @@
             <td>${item.vehicleLoadTaken == null ? 0 : item.vehicleLoadTaken.toLocaleString('en-US') }</td>
           
             <td>
-                ${item.rankName}
+                ${item.rankName == null ? '' : item.rankName}
             </td>
             <td>
                 <div class="">
                     <p class=" " >
-                        ${item.loadTypeName}
+                        ${item.loadTypeName == null ? '' : item.loadTypeName}
                     </p>
                 </div>
 
@@ -444,7 +444,7 @@
             <td>
                 <div class="status-dropdown">
                     <button class="dropdown-toggle " data-options='${jsonString2}'>
-                        ${item.loadingStatusName}
+                        ${item.loadingStatusName == null ? '' : item.loadingStatusName}
                     </button>
                 </div>
 
