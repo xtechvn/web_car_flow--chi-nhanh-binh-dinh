@@ -497,8 +497,8 @@ namespace Repositories.Repositories
                     ws.Cells["C1"].PutValue("Tên khách hàng (Trại, đại lý)");
                     ws.Cells["D1"].PutValue("Mã khách hàng (Trại, đại lý)");
                     ws.Cells["E1"].PutValue("Tên lái xe");
-                    ws.Cells["F1"].PutValue("Biển số xe");
-                    ws.Cells["G1"].PutValue("Số điện thoại");
+                    ws.Cells["F1"].PutValue("Số điện thoại");
+                    ws.Cells["G1"].PutValue("Biển số xe");
                     ws.Cells["H1"].PutValue("Tải trọng xe (kg)");
                     ws.Cells["I1"].PutValue("KH Ghi chú");
                     ws.Cells["J1"].PutValue("BV ghi chú");
