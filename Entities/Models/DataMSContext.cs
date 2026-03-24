@@ -295,7 +295,7 @@ namespace Entities.Models
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
-                entity.Property(e => e.Csnotes)
+                entity.Property(e => e.CSNotes)
                     .HasMaxLength(500)
                     .HasColumnName("CSNotes");
 

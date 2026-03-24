@@ -43,6 +43,6 @@ namespace Entities.Models
         public decimal? VehicleLoadTaken { get; set; }
         public string ProtectNotes { get; set; }
         public int? Rank { get; set; }
-        public string Csnotes { get; set; }
+        public string CSNotes { get; set; }
     }
 }
