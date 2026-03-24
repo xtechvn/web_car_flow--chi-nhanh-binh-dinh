@@ -47,7 +47,7 @@ namespace Entities.ViewModels.Car
         public string? AudioPath { get; set; }
         public string? RankName { get; set; }
         public int? Rank { get; set; }
-        public string? CSNotes { get; set; }
+        public string CSNotes { get; set; }
     }
 
 }

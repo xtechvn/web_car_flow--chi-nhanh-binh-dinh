@@ -269,7 +269,7 @@ namespace WEB.CMS.Controllers
                 model.TrangThai = detail.TrangThai;
                 model.Rank = detail.Rank;
                 model.RankName = detail.RankName;
-                model.CSNotes = detail.CSNotes;
+                model.CSNotes = detail.Csnotes;
                 switch (type)
                 {
                     case 1:
