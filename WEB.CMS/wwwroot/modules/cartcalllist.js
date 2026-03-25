@@ -193,51 +193,7 @@ $(document).ready(function () {
                     var note = null;
                     var text_type = $('.CartoFactory_' + id_row + '_troughWeight').text().trim();
 
-                    // 👉 Nếu chọn Hoàn thành mà chưa nhập trọng lượng → hiển thị input phụ
-                    if ((val_TT == 0 || val_TT == 5) && (weight == 0 || weight === "")) {
-                        if ($menu.find(".extra-weight").length === 0) {
-                            let $extra = $('<div class="extra-weight" style="margin:10px 0;">' +
-                                '<input type="number" class="weight-input" ' +
-                                'placeholder="Vui lòng nhập trọng lượng (kg)" ' +
-                                'style="width:100%;padding:5px;" ' +
-                                'min="0" max="99999999" ' +
-                                'oninput="if(this.value.length>8)this.value=this.value.slice(0,8);" />' +
-                                '</div>');
-
-                            $extra.insertBefore($menu.find('.actions'));
-
-                            // 👉 Focus vào input ngay khi nó xuất hiện
-                            $extra.find("input").focus();
-                            return; // dừng, chờ user nhập
-                        } else {
-                            weight = $menu.find(".extra-weight .weight-input").val().replaceAll(",", "");
-                            if (!weight || weight == 0) {
-                                alert("Vui lòng nhập trọng lượng!");
-                                return;
-                            }
-                            // đồng bộ lại vào input chính trong row
-                            $row.find('input.weight').val(weight);
-                        }
-                    }
-                    if (val_TT == 4) {
-                        if ($menu.find(".extra-weight").length === 0) {
-                            var $extra = $('<div class="extra-weight" style="margin:10px 0;"><textarea class="weight-textarea" placeholder="Vui lòng nhập lý do" style="width:100%;padding:5px;"></textarea></div>');
-
-                            $extra.insertBefore($menu.find('.actions'));
-
-                            // 👉 Focus vào input ngay khi nó xuất hiện
-                            $extra.find("textarea").focus();
-                            return; // dừng, chờ user nhập
-                        } else {
-                            note = $menu.find(".weight-textarea").val();
-                            if (!note || note == "") {
-                                alert("Vui lòng nhập lý do!");
-                                return;
-                            }
-
-                        }
-
-                    }
+         
                     // ✅ Gọi API update
                     var status_type = 0;
                     $.ajax({

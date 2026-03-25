@@ -1,4 +1,4 @@
-﻿using Entities.Models;
+using Entities.Models;
 using Entities.ViewModels.Car;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -409,6 +409,7 @@ namespace WEB.CMS.Controllers
                             if (model.VehicleTroughStatus == null || model.VehicleTroughStatus == (int)VehicleTroughStatus.Blank || model.VehicleTroughStatus == (int)VehicleTroughStatus.Ngat_mang)
                             {
                                 model.VehicleTroughStatus = (int)VehicleTroughStatus.Da_goi;
+                                model.VehicleTroughTimeComeIn = DateTime.Now;
                             }
 
                             detail.ListTroughWeight = await _vehicleInspectionRepository.GetListTroughWeightByVehicleInspectionId(detail.Id);
@@ -483,8 +484,7 @@ namespace WEB.CMS.Controllers
                             {
                                 model.VehicleTroughTimeComeOut = DateTime.Now;
                                 detail.VehicleTroughTimeComeOut = DateTime.Now;
-                                if (detail.VehicleTroughStatus == (int)VehicleTroughStatus.Boc_Hang)
-                                {
+                                
                                     var model_TroughWeight = new TroughWeight();
                                     model_TroughWeight.VehicleInspectionId = id;
                                     model_TroughWeight.TroughType = detail.TroughType;
@@ -493,22 +493,14 @@ namespace WEB.CMS.Controllers
                                     model_TroughWeight.StartDate = model.VehicleTroughTimeComeIn;
                                     model_TroughWeight.EndDate = DateTime.Now;
                                     _vehicleInspectionRepository.InsertTroughWeight(model_TroughWeight);
-                                }
-                                if (detail.VehicleTroughStatus != (int)VehicleTroughStatus.Blank && detail.VehicleTroughStatus != (int)VehicleTroughStatus.Boc_Hang && detail.VehicleTroughStatus != (int)VehicleTroughStatus.Ngat_mang)
-                                {
-                                    return Ok(new
-                                    {
-                                        status = (int)ResponseType.ERROR,
-                                        msg = "Quy trình sử lý đang không đúng"
-                                    });
-                                }
+                                
+                                
                             }
 
                             if (status == (int)VehicleTroughStatus.Ngat_mang)
                             {
                                 model.VehicleTroughTimeComeOut = DateTime.Now;
-                                if (detail.VehicleTroughStatus == (int)VehicleTroughStatus.Boc_Hang)
-                                {
+                              
                                     var model_TroughWeight = new TroughWeight();
                                     model_TroughWeight.VehicleInspectionId = id;
                                     model_TroughWeight.TroughType = detail.TroughType;
@@ -517,28 +509,13 @@ namespace WEB.CMS.Controllers
                                     model_TroughWeight.StartDate = model.VehicleTroughTimeComeIn;
                                     model_TroughWeight.EndDate = DateTime.Now;
                                     _vehicleInspectionRepository.InsertTroughWeight(model_TroughWeight);
-                                }
-                                else
-                                {
-                                    return Ok(new
-                                    {
-                                        status = (int)ResponseType.ERROR,
-                                        msg = "Quy trình sử lý đang không đúng"
-                                    });
-                                }
-
+                                
+                               
                             }
                             model.VehicleTroughStatus = status;
                             model.VehicleTroughWeight = weight; // ✅ lấy từ input
                             model.Note = Note;
-                            //if ((model.VehicleTroughWeight == null || model.VehicleTroughWeight == 0) && status == (int)VehicleTroughStatus.Hoan_thanh)
-                            //{
-                            //    return Ok(new
-                            //    {
-                            //        status = (int)ResponseType.ERROR,
-                            //        msg = "Cập nhật không thành công.Chưa nhập trọng lượng "
-                            //    });
-                            //}
+        
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if (UpdateCar > 0)
                             {
@@ -600,6 +577,7 @@ namespace WEB.CMS.Controllers
                             var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHINGSTATUS);
                             var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.VehicleWeighingStatus);
                             detail.VehicleWeighingStatusName = allcode_detail.Description;
+                            detail.ListTroughWeight = await _vehicleInspectionRepository.GetListTroughWeightByVehicleInspectionId(detail.Id);
                             if (status == (int)VehicleWeighingStatus.DA_Can_Ra)
                             {
                                 await _hubContext.Clients.All.SendAsync("ListVehicles_Da_SL", detail);

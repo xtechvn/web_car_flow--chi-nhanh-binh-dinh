@@ -65,7 +65,7 @@ namespace WEB.CMS.Controllers
                     foreach (var item in data)
                     {
                         item.ListTroughWeight = await _vehicleInspectionRepository.GetListTroughWeightByVehicleInspectionId(item.Id);
-                        if ((item.ListTroughWeight == null || item.VehicleTroughStatus != (int)VehicleTroughStatus.Blank ||item.VehicleTroughStatus != (int)VehicleTroughStatus.Bo_Luot) && SearchModel.type == 0 )
+                        if ((item.ListTroughWeight == null ||item.VehicleTroughStatus != (int)VehicleTroughStatus.Bo_Luot) && SearchModel.type == 0 )
                         {
                             if (item.ListTroughWeight == null)
                             {
@@ -96,6 +96,14 @@ namespace WEB.CMS.Controllers
                 var AllCode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHINGSTATUS);
                 ViewBag.AllCode = AllCode;
                 var data = await _vehicleInspectionRepository.GetListVehicleListVehicles(SearchModel);
+                if (data != null && data.Count > 0)
+                {
+                    foreach (var item in data)
+                    {
+                        item.ListTroughWeight = await _vehicleInspectionRepository.GetListTroughWeightByVehicleInspectionId(item.Id);
+                       
+                    }
+                }
                 return PartialView(data);
             }
             catch (Exception ex)

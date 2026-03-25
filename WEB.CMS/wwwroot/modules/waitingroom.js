@@ -90,7 +90,7 @@ $(document).ready(function () {
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
-  
+
     connection.off("ListCartoFactory");
     connection.on("ListCartoFactory", function (item) {
         $('#dataBody-0').find('.waiting_room_' + item.id).remove();
@@ -126,6 +126,13 @@ $(document).ready(function () {
         console.log("✅ Đã reconnect. Connection ID:", connectionId);
     });
 
+    connection.off("ListProcessingIsLoading_Da_SL");
+    connection.on("ListProcessingIsLoading_Da_SL", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        $('.waiting_room_' + item.id).remove();
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
     connection.onclose(error => {
         console.error("❌ Kết nối bị đóng.", error);
     });
@@ -142,6 +149,7 @@ $(document).ready(function () {
 var _waiting_room = {
     init: function () {
         _waiting_room.GetList();
+        _waiting_room.GetList_Da_SL();
 
     },
     GetList: function () {
@@ -164,6 +172,32 @@ var _waiting_room = {
             success: function (result) {
                 $('#imgLoading').hide();
                 $('#Processing_Is_Loading').html(result);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log("Status: " + textStatus);
+            }
+        });
+    },
+    GetList_Da_SL: function () {
+        var model = {
+            VehicleNumber: "",
+            PhoneNumber: "",
+            VehicleStatus: 0,
+            LoadType: null,
+            VehicleWeighingType: null,
+            VehicleTroughStatus: null,
+            TroughType: null,
+            VehicleWeighingStatus: null,
+            LoadingStatus: 0,
+            type: 0,
+        }
+        $.ajax({
+            url: "/WaitingRoom/GetList",
+            type: "post",
+            data: { SearchModel: model },
+            success: function (result) {
+                $('#imgLoading').hide();
+                $('#Processing_Is_Loading_Da_SL').html(result);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus);

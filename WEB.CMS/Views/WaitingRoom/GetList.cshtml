@@ -57,7 +57,7 @@
                 <th>Nhóm tài</th>
             </tr>
         </thead>
-        <tbody id="dataBody-0">
+        <tbody id="dataBody-@ViewBag.type">
             @foreach (var item in Model)
             {
                 <tr class="waiting_room_@item.Id" data-queue="@(((DateTime)item.VehicleArrivalDate).ToString("HH:mm dd/MM/yyyy"))">

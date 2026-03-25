@@ -145,6 +145,11 @@ $(document).ready(function () {
                     }
                 }
 
+                var weight = $('.CartoFactory_' + id_row + '_weight').val();
+                var note = "";
+
+          
+
                 const cls = $active.attr('class').split(/\s+/)
                     .filter(c => c !== 'active')[0] || '';
 
@@ -156,7 +161,7 @@ $(document).ready(function () {
                     }) // xoá các class status- cũ
                     .addClass(cls); // gắn class mới (status-arrived, status-blank…)
 
-                _listVehicles.UpdateStatus(id_row, val_TT, 7);
+                _listVehicles.UpdateStatus(id_row, val_TT, 7, weight, note);
                 if (val_TT == 0) {
                     $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
 
@@ -191,82 +196,110 @@ $(document).ready(function () {
         .then(() => console.log("✅ SignalR connected"))
         .catch(err => console.error(err));
 
-    const AllCode = [
-        { Description: "Blank", CodeValue: "2" },
-       
-        { Description: "Đã cân ra", CodeValue: "0" },
-        // Add more objects as needed
+    const TroughOptions = [
+        { text: "Máng 1", value: "1" },
+        { text: "Máng 2", value: "2" },
+        { text: "Máng 3", value: "3" },
+        { text: "Máng 4", value: "4" },
+        { text: "Máng 5", value: "5" },
+        { text: "Máng 6", value: "6" },
+        { text: "Máng 7", value: "7" },
+        { text: "Máng 8", value: "8" }
     ];
-    // Create a new array of objects in the desired format
-    const options = AllCode.map(allcode => ({
-        text: allcode.Description,
-        value: allcode.CodeValue
-    }));
-    const jsonString = JSON.stringify(options);
+    const StatusOptions = [
+        { text: "Blank", value: "2" },
+        { text: "Đã cân ra", value: "0" }
+    ];
+
+    const jsonTrough = JSON.stringify(TroughOptions);
+    const jsonStatus = JSON.stringify(StatusOptions);
     // Hàm render row
-    function renderRow(item) {
+    function renderRow(item, isProcessed) {
         var date = new Date(item.vehicleWeighingTimeComplete);
-        let formatted =
+        let formatted = item.vehicleWeighingTimeComplete ? 
             String(date.getHours()).padStart(2, '0') + ":" +
             String(date.getMinutes()).padStart(2, '0') + " " +
             String(date.getDate()).padStart(2, '0') + "/" +
             String(date.getMonth() + 1).padStart(2, '0') + "/" +
-            date.getFullYear();
+            date.getFullYear() : "";
+
         var date2 = new Date(item.vehicleTroughTimeComeOut);
-        let formatted2 =
+        let formatted2 = item.vehicleTroughTimeComeOut ? 
             String(date2.getHours()).padStart(2, '0') + ":" +
             String(date2.getMinutes()).padStart(2, '0') + " " +
             String(date2.getDate()).padStart(2, '0') + "/" +
             String(date2.getMonth() + 1).padStart(2, '0') + "/" +
-            date2.getFullYear()  ;
-        return `
-        <tr class="CartoFactory_${item.id}" data-queue="${formatted2}" >
-            <td>${item.recordNumber}</td>
-            <td>${item.vehicleNumber}</td>
-            <td>${item.customerName}</td>
-            <td>${item.driverName}</td>    
-            <td>${formatted}</td>
-            <td>
-                <div class="status-dropdown">
-                    <button class="dropdown-toggle " data-options='${jsonString}'>
-                        ${item.vehicleWeighingStatusName}
-                    </button>
-                </div>
+            date2.getFullYear() : "";
 
-            </td>
+        var html = "";
+        if (item.listTroughWeight != null && item.listTroughWeight.length > 0) {
+            for (var i = 0; i < item.listTroughWeight.length; i++) {
+                let tw = item.listTroughWeight[i];
+                let troughDisplay = tw.vehicleTroughWeight !== null ? 
+                    `<p style="font-size:13px!important">Máng ${tw.troughType || ""}</p>` : 
+                    `<div class="status-dropdown">
+                        <button class="dropdown-toggle ${isProcessed ? "disabled" : ""} ${tw.vehicleTroughWeight !== null ? "CartoFactory_" + item.id + "_troughWeight" : ""}"
+                                data-type="1" data-options='${jsonTrough}' ${isProcessed ? "disabled" : ""}>
+                            ${item.troughTypeName || ""}
+                        </button>
+                    </div>`;
 
-        </tr>`;
-    }
-    function renderRow2(item) {
-        var date = new Date(item.vehicleTroughTimeComeOut);
-        let formatted =
-            String(date.getHours()).padStart(2, '0') + ":" +
-            String(date.getMinutes()).padStart(2, '0') + " " +
-            String(date.getDate()).padStart(2, '0') + "/" +
-            String(date.getMonth() + 1).padStart(2, '0') + "/" +
-            date.getFullYear();
-        return `
-        <tr class="CartoFactory_${item.id}" data-queue="${formatted}" >
-            <td>${item.recordNumber}</td>
-            <td>${item.vehicleNumber}</td>
-            <td>${item.customerName}</td>
-            <td>${item.driverName}</td>
-            <td></td>
-            <td>
-                <div class="status-dropdown">
-                    <button class="dropdown-toggle " data-options='${jsonString}'>
-                        ${item.vehicleWeighingStatusName}
-                    </button>
-                </div>
+                let actionIcons = (!isProcessed) ? `
+                    <a class="cursor-pointer check-troughWeight" title="Lưu" style="margin-left: 6px;"><i class="icon-check"></i></a>
+                    <a class="cursor-pointer cancel-troughWeight" title="Hủy thao tác"><i class="icon-cancel"></i></a>` : "";
 
-            </td>
-
-        </tr>`;
+                html += `
+                <tr class="CartoFactory_${item.id}" data-queue="${formatted2}">
+                    <td>${item.recordNumber}</td>
+                    <td>${item.vehicleNumber}</td>
+                    <td>${item.customerName}</td>
+                    <td>${item.driverName}</td>    
+                    <td>${formatted}</td>
+                    <td>${troughDisplay}</td>
+                    <td>
+                        <input class="TroughWeightId" value="${tw.id}" style="display:none;" />
+                        <input type="text" style="width:85%!important" class="input-form currency CartoFactory_TroughWeight weight CartoFactory_${item.id}_weight ${isProcessed ? "disabled" : ""}"
+                               maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,8);"
+                               value="${tw.vehicleTroughWeight !== null ? tw.vehicleTroughWeight.toLocaleString('en-US') : ""}"
+                               data-original="${tw.vehicleTroughWeight !== null ? tw.vehicleTroughWeight.toLocaleString('en-US') : ""}"
+                               placeholder="Vui lòng nhập" ${isProcessed ? "disabled" : ""} />
+                        ${actionIcons}
+                    </td>
+                    <td>
+                        <div class="status-dropdown">
+                            <button class="dropdown-toggle" data-options='${jsonStatus}'>
+                                ${item.vehicleWeighingStatusName || ""}
+                            </button>
+                        </div>
+                    </td>
+                </tr>`;
+            }
+        } else {
+            html = `
+            <tr class="CartoFactory_${item.id}" data-queue="${formatted2}">
+                <td>${item.recordNumber}</td>
+                <td>${item.vehicleNumber}</td>
+                <td>${item.customerName}</td>
+                <td>${item.driverName}</td>    
+                <td>${formatted}</td>
+                <td></td>
+                <td></td>
+                <td>
+                    <div class="status-dropdown">
+                        <button class="dropdown-toggle" data-options='${jsonStatus}'>
+                            ${item.vehicleWeighingStatusName || ""}
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
+        }
+        return html;
     }
 
     // Hàm sắp xếp lại tbody theo QueueNumber tăng dần
     function sortTable_Da_SL() {
         const tbody = document.getElementById("dataBody-1");
+        if (!tbody) return;
         const rows = Array.from(tbody.querySelectorAll("tr"));
 
         rows.sort((a, b) => {
@@ -278,13 +311,15 @@ $(document).ready(function () {
         tbody.innerHTML = "";
         rows.forEach(r => tbody.appendChild(r));
     }
+
     function sortTable() {
         const tbody = document.getElementById("dataBody-0");
+        if (!tbody) return;
         const rows = Array.from(tbody.querySelectorAll("tr"));
         rows.sort((a, b) => {
             const timeA = parseDateTime(a.dataset.queue);
             const timeB = parseDateTime(b.dataset.queue);
-            return timeA - timeB; // tăng dần
+            return timeA - timeB;
         });
 
         tbody.innerHTML = "";
@@ -296,29 +331,41 @@ $(document).ready(function () {
     connection.on("ListVehicles_Da_SL", function (item) {
         $('.CartoFactory_' + item.id).remove();
         const tbody = document.getElementById("dataBody-1");
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
-        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+        if (tbody) {
+            tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
+            sortTable_Da_SL();
+            _listVehicles.autoRowspanWithCondition("ListCarCall-1", [0, 1, 2, 3, 4, 7], [0, 1, 2, 3, 4]);
+        }
     });
+
     connection.off("ListVehicles");
     connection.on("ListVehicles", function (item) {
         $('.CartoFactory_' + item.id).remove();
         const tbody = document.getElementById("dataBody-0");
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
-        sortTable(); // sắp xếp lại ngay khi thêm
+        if (tbody) {
+            tbody.insertAdjacentHTML("beforeend", renderRow(item, false));
+            sortTable();
+            _listVehicles.autoRowspanWithCondition("ListCarCall-0", [0, 1, 2, 3, 4, 7], [0, 1, 2, 3, 4]);
+        }
     });
+
     // Nhận data mới từ gọi xe cân đầu vào
     connection.off("ListCarCall_Da_SL");
     connection.on("ListCarCall_Da_SL", function (item) {
         $('.CartoFactory_' + item.id).remove();
         const tbody = document.getElementById("dataBody-0");
-        tbody.insertAdjacentHTML("beforeend", renderRow2(item));
-        sortTable();
+        if (tbody) {
+            tbody.insertAdjacentHTML("beforeend", renderRow(item, false));
+            sortTable();
+            _listVehicles.autoRowspanWithCondition("ListCarCall-0", [0, 1, 2, 3, 4, 7], [0, 1, 2, 3, 4]);
+        }
     });
+
     connection.off("ListCarCall");
     connection.on("ListCarCall", function (item) {
         $('#dataBody-0').find('.CartoFactory_' + item.id).remove();
-
     });
+
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);
     });
@@ -330,14 +377,35 @@ $(document).ready(function () {
     connection.onclose(error => {
         console.error("❌ Kết nối bị đóng.", error);
     });
+
     function parseDateTime(str) {
+        if (!str) return 0;
         // "11:33 17/12/2025"
-        const [time, date] = str.split(" ");
-        const [hour, minute] = time.split(":").map(Number);
-        const [day, month, year] = date.split("/").map(Number);
+        const parts = str.split(" ");
+        if (parts.length < 2) return 0;
+        const [time, date] = parts;
+        const hourMin = time.split(":");
+        const dayMonthYear = date.split("/");
+        if (hourMin.length < 2 || dayMonthYear.length < 3) return 0;
+
+        const [hour, minute] = hourMin.map(Number);
+        const [day, month, year] = dayMonthYear.map(Number);
 
         return new Date(year, month - 1, day, hour, minute).getTime();
     }
+
+    $(document).on('click', '.check-troughWeight', function (e) {
+        var element = $(this);
+        var TroughWeightId = element.closest('tr').find('input.TroughWeightId').val();
+        var weight_TroughWeightId = element.closest('td').find('input.CartoFactory_TroughWeight').val();
+        weight_TroughWeightId = weight_TroughWeightId != undefined ? weight_TroughWeightId.replace(',', '') : 0;
+        _listVehicles.UpdateTroughWeight(TroughWeightId, weight_TroughWeightId, element);
+    });
+    $(document).on('click', '.cancel-troughWeight', function (e) {
+        var element = $(this);
+        var TroughWeightId = element.closest('tr').find('input.TroughWeightId').val();
+        _listVehicles.CancelTroughWeight(TroughWeightId, element);
+    });
 });
 var _listVehicles = {
     init: function () {
@@ -399,11 +467,11 @@ var _listVehicles = {
             }
         });
     },
-    UpdateStatus: function (id, status, type) {
+    UpdateStatus: function (id, status, type, weight, note) {
         $.ajax({
             url: "/Car/UpdateStatus",
             type: "post",
-            data: { id: id, status: status, type: type },
+            data: { id: id, status: status, type: type, weight: 0, Note: note },
             success: function (result) {
                 if (result.status == 0) {
                     _msgalert.success(result.msg)
@@ -416,5 +484,102 @@ var _listVehicles = {
                 console.log("Status: " + textStatus);
             }
         });
-    }
+    },
+    UpdateTroughWeight: function (id, weight_TroughWeightId, element) {
+        $.ajax({
+            url: "/Car/UpdateTroughWeight",
+            type: "post",
+            data: { id: id, VehicleTroughWeight: weight_TroughWeightId },
+            success: function (result) {
+                if (result.status == 0) {
+                    _msgalert.success(result.msg);
+                    // Update data-original with the newly saved value
+                    if (element) {
+                        element.closest('td').find('input.CartoFactory_TroughWeight').attr('data-original', weight_TroughWeightId);
+                    }
+                } else {
+                    _msgalert.error(result.msg);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log("Status: " + textStatus);
+            }
+        });
+    },
+    CancelTroughWeight: function (id, element) {
+        var $input = element.closest('td').find('input.CartoFactory_TroughWeight');
+        var originalValue = $input.data('original') || "";
+        $input.val(originalValue);
+        _msgalert.success("Đã hủy thao tác và khôi phục số liệu ban đầu.");
+
+        // Optionally still call the server API if it performs necessary cleanup
+        $.ajax({
+            url: "/Car/CancelTroughWeight",
+            type: "post",
+            data: { id: id },
+            success: function (result) {
+                // If the server returns a definitive 'original' value, we can sync it here too
+                if (result.status == 0 && result.data !== undefined) {
+                    $input.val(result.data);
+                    $input.attr('data-original', result.data);
+                }
+            }
+        });
+    },
+    autoRowspanWithCondition: function (tableId, colIndexes, compareCols) {
+        const table = document.getElementById(tableId);
+        if (!table) return;
+
+        const rows = Array.from(table.querySelectorAll("tbody tr"));
+
+        // Khởi tạo object lưu text các cột compare của hàng trước
+        let prevRowCompareText = {};
+
+        rows.forEach(row => {
+            colIndexes.forEach(colIndex => {
+                if (row.cells[colIndex]) {
+                    row.cells[colIndex].style.display = "";
+                    row.cells[colIndex].rowSpan = 1;
+                }
+            });
+        });
+
+        colIndexes.forEach(colIndex => {
+            let prevCell = null;
+            let prevText = "";
+            let span = 1;
+
+            rows.forEach(row => {
+                const cell = row.cells[colIndex];
+                if (!cell) return;
+
+                // Lấy text sạch
+                const text = cell.innerText.replace(/\s+/g, ' ').trim();
+
+                // Kiểm tra điều kiện các cột compareCols có giống nhau
+                const sameAll = compareCols.every(c => {
+                    const compareCell = row.cells[c];
+                    if (!compareCell) return false;
+                    const compareText = compareCell.innerText.replace(/\s+/g, ' ').trim();
+                    return compareText === prevRowCompareText[c];
+                });
+
+                if (text === prevText && sameAll && prevCell != null) {
+                    span++;
+                    prevCell.rowSpan = span;
+                    cell.style.display = "none"; // ẩn ô trùng
+                } else {
+                    prevText = text;
+                    prevCell = cell;
+                    span = 1;
+
+                    // Lưu text của các cột so sánh cho hàng này
+                    compareCols.forEach(c => {
+                        const compareCell = row.cells[c];
+                        prevRowCompareText[c] = compareCell ? compareCell.innerText.replace(/\s+/g, ' ').trim() : '';
+                    });
+                }
+            });
+        });
+    },
 }
