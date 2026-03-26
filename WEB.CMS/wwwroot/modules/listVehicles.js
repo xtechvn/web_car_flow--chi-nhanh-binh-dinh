@@ -62,7 +62,7 @@ $(document).ready(function () {
         $('<button class="cancel">Bỏ qua</button>').appendTo($actions);
         $('<button class="confirm">Xác nhận</button>').appendTo($actions);
         $menu.append($actions);
-        
+
         // --- 🔧 Tính toán vị trí Absolute Portal ---
         $menu.css({
             position: 'absolute',
@@ -102,7 +102,7 @@ $(document).ready(function () {
         $menu.css({
             top: cssTop,
             left: cssLeft,
-            visibility: 'visible' 
+            visibility: 'visible'
         });
 
         // 🕵️ Lắng nghe cuộn từ tất cả các thẻ cha để đóng menu ngay khi cuộn
@@ -148,7 +148,7 @@ $(document).ready(function () {
                 var weight = $('.CartoFactory_' + id_row + '_weight').val();
                 var note = "";
 
-          
+
 
                 const cls = $active.attr('class').split(/\s+/)
                     .filter(c => c !== 'active')[0] || '';
@@ -190,7 +190,7 @@ $(document).ready(function () {
     }
     const connection = new signalR.HubConnectionBuilder()
         .withUrl("/CarHub", { transport: signalR.HttpTransportType.WebSockets, skipNegotiation: true })
-        .withAutomaticReconnect([ 2000, 5000, 10000])
+        .withAutomaticReconnect([2000, 5000, 10000])
         .build();
     connection.start()
         .then(() => console.log("✅ SignalR connected"))
@@ -216,7 +216,7 @@ $(document).ready(function () {
     // Hàm render row
     function renderRow(item, isProcessed) {
         var date = new Date(item.vehicleWeighingTimeComplete);
-        let formatted = item.vehicleWeighingTimeComplete ? 
+        let formatted = item.vehicleWeighingTimeComplete ?
             String(date.getHours()).padStart(2, '0') + ":" +
             String(date.getMinutes()).padStart(2, '0') + " " +
             String(date.getDate()).padStart(2, '0') + "/" +
@@ -224,7 +224,7 @@ $(document).ready(function () {
             date.getFullYear() : "";
 
         var date2 = new Date(item.vehicleTroughTimeComeOut);
-        let formatted2 = item.vehicleTroughTimeComeOut ? 
+        let formatted2 = item.vehicleTroughTimeComeOut ?
             String(date2.getHours()).padStart(2, '0') + ":" +
             String(date2.getMinutes()).padStart(2, '0') + " " +
             String(date2.getDate()).padStart(2, '0') + "/" +
@@ -235,8 +235,8 @@ $(document).ready(function () {
         if (item.listTroughWeight != null && item.listTroughWeight.length > 0) {
             for (var i = 0; i < item.listTroughWeight.length; i++) {
                 let tw = item.listTroughWeight[i];
-                let troughDisplay = tw.vehicleTroughWeight !== null ? 
-                    `<p style="font-size:13px!important">Máng ${tw.troughType || ""}</p>` : 
+                let troughDisplay = tw.vehicleTroughWeight !== null ?
+                    `<p style="font-size:13px!important">Máng ${tw.troughType || ""}</p>` :
                     `<div class="status-dropdown">
                         <button class="dropdown-toggle ${isProcessed ? "disabled" : ""} ${tw.vehicleTroughWeight !== null ? "CartoFactory_" + item.id + "_troughWeight" : ""}"
                                 data-type="1" data-options='${jsonTrough}' ${isProcessed ? "disabled" : ""}>
@@ -255,7 +255,15 @@ $(document).ready(function () {
                     <td>${item.customerName}</td>
                     <td>${item.driverName}</td>    
                     <td>${formatted}</td>
+                    <td>
+                        <div style="display: flex; align-items: center">
+                            <div style="white-space: pre-line;">
+                                ${item.note}
+                            </div>
+                        </div>
+                    </td>
                     <td>${troughDisplay}</td>
+
                     <td>
                         <input class="TroughWeightId" value="${tw.id}" style="display:none;" />
                         <input type="text" style="width:85%!important" class="input-form currency CartoFactory_TroughWeight weight CartoFactory_${item.id}_weight ${isProcessed ? "disabled" : ""}"
@@ -282,7 +290,13 @@ $(document).ready(function () {
                 <td>${item.customerName}</td>
                 <td>${item.driverName}</td>    
                 <td>${formatted}</td>
-                <td></td>
+                <td>
+                    <div style="display: flex; align-items: center">
+                        <div style="white-space: pre-line;">
+                            ${item.note}
+                        </div>
+                    </div>
+                </td>
                 <td></td>
                 <td>
                     <div class="status-dropdown">
@@ -325,7 +339,7 @@ $(document).ready(function () {
         tbody.innerHTML = "";
         rows.forEach(r => tbody.appendChild(r));
     }
- 
+
     // Nhận data mới từ server
     connection.off("ListVehicles_Da_SL");
     connection.on("ListVehicles_Da_SL", function (item) {
@@ -334,7 +348,7 @@ $(document).ready(function () {
         if (tbody) {
             tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
             sortTable_Da_SL();
-            _listVehicles.autoRowspanWithCondition("ListCarCall-1", [0, 1, 2, 3, 4, 7], [0, 1, 2, 3, 4]);
+            _listVehicles.autoRowspanWithCondition("ListCarCall-1", [0, 1, 2, 3, 4,5, 8], [0, 1, 2, 3, 4],5);
         }
     });
 
@@ -345,7 +359,7 @@ $(document).ready(function () {
         if (tbody) {
             tbody.insertAdjacentHTML("beforeend", renderRow(item, false));
             sortTable();
-            _listVehicles.autoRowspanWithCondition("ListCarCall-0", [0, 1, 2, 3, 4, 7], [0, 1, 2, 3, 4]);
+            _listVehicles.autoRowspanWithCondition("ListCarCall-0", [0, 1, 2, 3, 4,5, 8], [0, 1, 2, 3, 4,5]);
         }
     });
 
@@ -357,7 +371,7 @@ $(document).ready(function () {
         if (tbody) {
             tbody.insertAdjacentHTML("beforeend", renderRow(item, false));
             sortTable();
-            _listVehicles.autoRowspanWithCondition("ListCarCall-0", [0, 1, 2, 3, 4, 7], [0, 1, 2, 3, 4]);
+            _listVehicles.autoRowspanWithCondition("ListCarCall-0", [0, 1, 2, 3, 4,5, 8], [0, 1, 2, 3, 4,5]);
         }
     });
 
@@ -415,7 +429,7 @@ var _listVehicles = {
     ListCartoFactory: function () {
         var model = {
             VehicleNumber: $('#input_chua_xu_ly').val(),
-            PhoneNumber: $('#input_chua_xu_ly').val(), 
+            PhoneNumber: $('#input_chua_xu_ly').val(),
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: 0,
@@ -424,7 +438,7 @@ var _listVehicles = {
             VehicleWeighingStatus: null,
             LoadingStatus: 0,
             VehicleWeighedstatus: 0,
-            type:0,
+            type: 0,
         }
         $.ajax({
             url: "/ListCar/ListVehiclesisLoading",
@@ -452,7 +466,7 @@ var _listVehicles = {
             LoadingStatus: 0,
             VehicleWeighedstatus: 0,
             type: 1,
-           
+
         }
         $.ajax({
             url: "/ListCar/ListVehiclesisLoading",

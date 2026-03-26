@@ -28,6 +28,7 @@
                 <th>Tên lái xe</th>
 
                 <th>Giờ cân ra</th>
+                <th>Ghi chú</th>
                 <th>Máng xuất</th>
                 <th>Trọng lượng (kg)</th>
                 <th>Tình Trạng</th>
@@ -50,6 +51,13 @@
 
                             <td>
                                 @(item.VehicleWeighingTimeComplete!=null?((DateTime)item.VehicleWeighingTimeComplete).ToString("HH:mm dd/MM/yyyy"):"")
+                            </td>
+                            <td>
+                                <div style="display: flex; align-items: center">
+                                    <div style="white-space: pre-line;">
+                                        @item.Note
+                                    </div>
+                                </div>
                             </td>
                             <td>
                                 <div class="status-dropdown">
@@ -149,6 +157,7 @@ else
                 <th>Tên KH (Trại, đại lý)</th>
                 <th>Tên lái xe</th>
                 <th>Giờ vào cân</th>
+                <th>Ghi chú</th>
                 <th>Máng xuất</th>
                 <th>Trọng lượng (kg)</th>
                 <th>Tình Trạng</th>
@@ -161,5 +170,5 @@ else
 
 <script>
     // Gộp cột nếu có nhiều dòng chung 1 xe
-    _listVehicles.autoRowspanWithCondition("ListCarCall-" + @ViewBag.type, [0, 1, 2, 3, 4, 7], [0, 1, 2, 3, 4]);
+    _listVehicles.autoRowspanWithCondition("ListCarCall-" + @ViewBag.type, [0, 1, 2, 3, 4,5, 8], [0, 1, 2, 3, 4,5]);
 </script>

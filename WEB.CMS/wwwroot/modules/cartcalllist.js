@@ -62,7 +62,7 @@ $(document).ready(function () {
         $('<button class="cancel">Bỏ qua</button>').appendTo($actions);
         $('<button class="confirm">Xác nhận</button>').appendTo($actions);
         $menu.append($actions);
-        
+
         // --- 🔧 Tính toán vị trí Absolute Portal ---
         $menu.css({
             position: 'absolute',
@@ -102,7 +102,7 @@ $(document).ready(function () {
         $menu.css({
             top: cssTop,
             left: cssLeft,
-            visibility: 'visible' 
+            visibility: 'visible'
         });
 
         // 🕵️ Lắng nghe cuộn từ tất cả các thẻ cha để đóng menu ngay khi cuộn
@@ -193,7 +193,7 @@ $(document).ready(function () {
                     var note = null;
                     var text_type = $('.CartoFactory_' + id_row + '_troughWeight').text().trim();
 
-         
+
                     // ✅ Gọi API update
                     var status_type = 0;
                     $.ajax({
@@ -330,9 +330,9 @@ $(document).ready(function () {
     ];
     const AllCode2 = [
         { Description: "Ngắt máng", CodeValue: "5" },
-        { Description: "Bỏ lượt", CodeValue: "4" },
+        
         { Description: "Blank", CodeValue: "3" },
-        { Description: "Đang xuất hàng", CodeValue: "2" },
+     
         { Description: "Đã gọi", CodeValue: "1" },
         { Description: "Hoàn thành", CodeValue: "0" },
         // Add more objects as needed
@@ -399,17 +399,12 @@ $(document).ready(function () {
         <td>${formatted || ""}</td>
         <td>${item.vehicleLoadTaken > 0 ? item.vehicleLoadTaken.toLocaleString('en-US') : 0}</td>
         <td>
-           ${item.listTroughWeight[itemTroughWeight].vehicleTroughWeight > 0 ? html_div : html_input}
+        
+            ${item.listTroughWeight[itemTroughWeight].vehicleTroughWeight != null? html_div : html_input}
         </td>
-      <td>
-        <input class="TroughWeightId" id="TroughWeightId_${item.id}.Id" value="${item.listTroughWeight[itemTroughWeight].id}" style="display:none;" />
-        <input type="text"
-               class="input-form currency  ${item.listTroughWeight[itemTroughWeight].vehicleTroughWeight > 0 ? " CartoFactory_" + item.id + "_weight" : "weight"}"
-               value="${item.listTroughWeight[itemTroughWeight].vehicleTroughWeight > 0 ? item.listTroughWeight[itemTroughWeight].vehicleTroughWeight : ""}"
-               placeholder="Vui lòng nhập"
-               ${isProcessed ? "disabled" : ""} />
-                ${item.listTroughWeight[itemTroughWeight].vehicleTroughWeight > 0 && isProcessed == false ? html_icon : ""}
-    </td>
+        <td>
+            <textarea class="Note" name="Note" value="${item.note || ""}">${item.note || ""}</textarea>
+        </td>
         <td>
             <div class="status-dropdown">
                 <button class="dropdown-toggle"
@@ -451,13 +446,7 @@ $(document).ready(function () {
            ${item.vehicleTroughWeight > 0 ? html_div : html_input}
         </td>
       <td>
-        <input class="TroughWeightId" id="TroughWeightId_${item.id}.Id" value="0" style="display:none;" />
-        <input type="text"
-               class="input-form currency  ${item.vehicleTroughWeight > 0 ? " CartoFactory_" + item.id + "_weight" : "weight"}"
-               value="${item.vehicleTroughWeight > 0 ? item.vehicleTroughWeight : ""}"
-               placeholder="Vui lòng nhập"
-               ${isProcessed ? "disabled" : ""} />
-                ${item.vehicleTroughWeight > 0 && isProcessed == false ? html_icon : ""}
+        <textarea class="Note" name="Note"  ${isProcessed ? "disabled" : ""} value="${item.note || ""}">${item.note || ""}</textarea>
     </td>
         <td>
             <div class="status-dropdown">
@@ -663,7 +652,7 @@ $(document).ready(function () {
         const tbody = document.getElementById("dataBody-1");
         tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
-        _cartcalllist.autoRowspanWithCondition("ListCarCall-1", [0, 1, 2, 3, 4, 5, 8], [0, 1, 2, 3, 4, 5]);
+        _cartcalllist.autoRowspanWithCondition("ListCarCall-1", [0, 1, 2, 3, 4, 5, 7, 8], [0, 1, 2, 3, 4, 5]);
         requestAnimationFrame(() => {
             _cartcalllist.initMangStatus();
         });
@@ -674,7 +663,7 @@ $(document).ready(function () {
         const tbody = document.getElementById("dataBody-1");
         tbody.insertAdjacentHTML("beforeend", renderRow_Bo_luot(item, true));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
-        _cartcalllist.autoRowspanWithCondition("ListCarCall-1", [0, 1, 2, 3, 4, 5, 8], [0, 1, 2, 3, 4, 5]);
+        _cartcalllist.autoRowspanWithCondition("ListCarCall-1", [0, 1, 2, 3, 4, 5, 7, 8], [0, 1, 2, 3, 4, 5]);
         requestAnimationFrame(() => {
             _cartcalllist.initMangStatus();
         });
@@ -717,7 +706,7 @@ $(document).ready(function () {
         $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow(item, false));
         sortTable(); // sắp xếp lại ngay khi thêm
-        _cartcalllist.autoRowspanWithCondition("ListCarCall-0", [0, 1, 2, 3, 4, 5, 8], [0, 1, 2, 3, 4, 5]);
+        _cartcalllist.autoRowspanWithCondition("ListCarCall-0", [0, 1, 2, 3, 4, 5, 7, 8], [0, 1, 2, 3, 4, 5]);
         requestAnimationFrame(() => {
             _cartcalllist.initMangStatus();
         });
@@ -729,7 +718,7 @@ $(document).ready(function () {
         const tbody = document.getElementById("dataBody-0");
         tbody.insertAdjacentHTML("beforeend", renderRow(item, false));
         sortTable();
-        _cartcalllist.autoRowspanWithCondition("ListCarCall-0", [0, 1, 2, 3, 4, 5, 8], [0, 1, 2, 3, 4, 5]);
+        _cartcalllist.autoRowspanWithCondition("ListCarCall-0", [0, 1, 2, 3, 4, 5, 7, 8], [0, 1, 2, 3, 4, 5]);
     });
     connection.off("ListWeighedInput");
     connection.on("ListWeighedInput", function (item) {
@@ -745,7 +734,7 @@ $(document).ready(function () {
         const tbody = document.getElementById("dataBody-1");
         tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
-        _cartcalllist.autoRowspanWithCondition("ListCarCall-1", [0, 1, 2, 3, 4, 5, 8], [0, 1, 2, 3, 4, 5]);
+        _cartcalllist.autoRowspanWithCondition("ListCarCall-1", [0, 1, 2, 3, 4, 5, 7, 8], [0, 1, 2, 3, 4, 5]);
     });
 
     connection.onreconnecting(error => {
@@ -775,6 +764,30 @@ $(document).ready(function () {
         element.addClass('weight');
 
         // Gọi ajax hoặc function bạn cần
+    });
+    $(document).on('blur', '#dataBody-0 .Note', function () {
+        var $textarea = $(this);
+        var note = $textarea.val();
+        var $row = $textarea.closest('tr');
+        var classList = $row.attr('class') || '';
+        var match = classList.match(/CartoFactory_(\d+)/);
+        if (!match) return;
+        var id = match[1];
+        $.ajax({
+            url: "/Car/UpdateStatus",
+            type: "post",
+            data: { id: id, status: 0, type: 13, weight: 0, Note: note },
+            success: function (result) {
+                if (result.status == 0) {
+                    _msgalert.success(result.msg);
+                } else {
+                    _msgalert.error(result.msg);
+                }
+            },
+            error: function () {
+                _msgalert.error("Lỗi kết nối");
+            }
+        });
     });
 });
 var _cartcalllist = {

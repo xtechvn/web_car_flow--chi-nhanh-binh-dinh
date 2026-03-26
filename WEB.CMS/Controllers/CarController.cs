@@ -484,7 +484,8 @@ namespace WEB.CMS.Controllers
                             {
                                 model.VehicleTroughTimeComeOut = DateTime.Now;
                                 detail.VehicleTroughTimeComeOut = DateTime.Now;
-                                
+                                if (detail.VehicleTroughStatus != (int)VehicleTroughStatus.Blank)
+                                {
                                     var model_TroughWeight = new TroughWeight();
                                     model_TroughWeight.VehicleInspectionId = id;
                                     model_TroughWeight.TroughType = detail.TroughType;
@@ -493,6 +494,8 @@ namespace WEB.CMS.Controllers
                                     model_TroughWeight.StartDate = model.VehicleTroughTimeComeIn;
                                     model_TroughWeight.EndDate = DateTime.Now;
                                     _vehicleInspectionRepository.InsertTroughWeight(model_TroughWeight);
+                                }
+                                  
                                 
                                 
                             }
@@ -552,6 +555,7 @@ namespace WEB.CMS.Controllers
                                 }
                                 else
                                 {
+                                    detail.ListTroughWeight.Add(new TroughWeight());
                                     await _hubContext.Clients.All.SendAsync("ListCarCall", detail);
                                 }
                             }
@@ -739,6 +743,34 @@ namespace WEB.CMS.Controllers
                             {
                                 detail.CSNotes = Note;
                                 await _hubContext.Clients.All.SendAsync("ProcessingIsLoading_khoa", detail);
+
+                            }
+                        }
+                        break;
+                    case 13:
+                        {
+
+                            model.Note = Note;
+                            UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+
+                            if (UpdateCar > 0)
+                            {
+                                detail.Note = Note;
+                                await _hubContext.Clients.All.SendAsync("ListCarCall", detail);
+                                return Ok(new
+                                {
+                                    status = (int)ResponseType.SUCCESS,
+                                    msg = "cập nhật thành công"
+                                });
+
+                            }
+                            else
+                            {
+                                return Ok(new
+                                {
+                                    status = (int)ResponseType.FAILED,
+                                    msg = "cập nhật không thành công"
+                                });
 
                             }
                         }
