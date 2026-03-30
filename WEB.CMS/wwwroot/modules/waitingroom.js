@@ -1,5 +1,6 @@
 $(document).ready(function () {
     _waiting_room.GetList();
+    _waiting_room.GetList_Da_SL();
     const connection = new signalR.HubConnectionBuilder()
         .withUrl("/CarHub", { transport: signalR.HttpTransportType.WebSockets, skipNegotiation: true })
         .withAutomaticReconnect([2000, 5000, 10000])
@@ -133,6 +134,18 @@ $(document).ready(function () {
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
+    connection.off("ListCallTheScale_0");
+    connection.on("ListCallTheScale_0", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow_DA_SL(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
+    connection.off("ListCallTheScale_1");
+    connection.on("ListCallTheScale_1", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow_DA_SL(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
     connection.onclose(error => {
         console.error("❌ Kết nối bị đóng.", error);
     });
@@ -189,7 +202,7 @@ var _waiting_room = {
             TroughType: null,
             VehicleWeighingStatus: null,
             LoadingStatus: 0,
-            type: 0,
+            type: 1,
         }
         $.ajax({
             url: "/WaitingRoom/GetList",
