@@ -8,6 +8,7 @@
     var _UserPosition = (List<UserPosition>)ViewBag.UserPosition;
     var _UserRoleList = (List<int>)ViewBag.UserRoleList;
     string company_type = (string)ViewBag.CompanyType;
+    var RoleId = ViewBag.RoleId;
     async Task ShowDepartment(Department item, int level = 0)
     {
         var childs = _DepartmentList.Where(s => s.ParentId == item.Id).ToList();
@@ -35,7 +36,7 @@
         color: red;
     }
 </style>
-<form id="form-create-user" data-companytype="@(company_type ?? "")">
+<form id="form-create-user" onsubmit="return false" data-companytype="@(company_type ?? "")">
     @if (Model.Id == 0)
     {
         <div class="form-grid">
@@ -96,6 +97,7 @@
                     @foreach (var item in _RoleList)
                     {
                         <option value="@item.Id">@item.Name</option>
+                        
                     }
                 </select>
             </div>
@@ -216,7 +218,14 @@
                 <select name="RoleId" required id="RoleId">
                     @foreach (var item in _RoleList)
                     {
-                        <option value="@item.Id">@item.Name</option>
+                        if (RoleId != null && RoleId == item.Id)
+                        {
+                            <option value="@item.Id" selected="selected">@item.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
                     }
                 </select>
             </div>

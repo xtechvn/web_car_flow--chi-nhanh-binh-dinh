@@ -244,9 +244,7 @@ $(document).ready(function () {
                         </button>
                     </div>`;
 
-                let actionIcons = (!isProcessed) ? `
-                    <a class="cursor-pointer check-troughWeight" title="Lưu" style="margin-left: 6px;"><i class="icon-check"></i></a>
-                    <a class="cursor-pointer cancel-troughWeight" title="Hủy thao tác"><i class="icon-cancel"></i></a>` : "";
+                let actionIcons = "";
 
                 html += `
                 <tr class="CartoFactory_${item.id}" data-queue="${formatted2}">
@@ -266,12 +264,11 @@ $(document).ready(function () {
 
                     <td>
                         <input class="TroughWeightId" value="${tw.id}" style="display:none;" />
-                        <input type="text" style="width:85%!important" class="input-form currency CartoFactory_TroughWeight weight CartoFactory_${item.id}_weight ${isProcessed ? "disabled" : ""}"
+                        <input type="text" style="width:100%!important" class="input-form currency CartoFactory_TroughWeight weight CartoFactory_${item.id}_weight ${isProcessed ? "disabled" : ""}"
                                maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,8);"
                                value="${tw.vehicleTroughWeight !== null ? tw.vehicleTroughWeight.toLocaleString('en-US') : ""}"
                                data-original="${tw.vehicleTroughWeight !== null ? tw.vehicleTroughWeight.toLocaleString('en-US') : ""}"
                                placeholder="Vui lòng nhập" ${isProcessed ? "disabled" : ""} />
-                        ${actionIcons}
                     </td>
                     <td>
                         <div class="status-dropdown">
@@ -408,17 +405,18 @@ $(document).ready(function () {
         return new Date(year, month - 1, day, hour, minute).getTime();
     }
 
-    $(document).on('click', '.check-troughWeight', function (e) {
+    $(document).on('blur', 'input.CartoFactory_TroughWeight', function (e) {
         var element = $(this);
-        var TroughWeightId = element.closest('tr').find('input.TroughWeightId').val();
-        var weight_TroughWeightId = element.closest('td').find('input.CartoFactory_TroughWeight').val();
-        weight_TroughWeightId = weight_TroughWeightId != undefined ? weight_TroughWeightId.replace(',', '') : 0;
+        var originalValue = element.attr('data-original') || "";
+        var currentValue = element.val();
+
+        if (currentValue === originalValue) {
+            return;
+        }
+
+        var TroughWeightId = element.closest('td').find('input.TroughWeightId').val();
+        var weight_TroughWeightId = currentValue != undefined ? currentValue.replace(',', '') : 0;
         _listVehicles.UpdateTroughWeight(TroughWeightId, weight_TroughWeightId, element);
-    });
-    $(document).on('click', '.cancel-troughWeight', function (e) {
-        var element = $(this);
-        var TroughWeightId = element.closest('tr').find('input.TroughWeightId').val();
-        _listVehicles.CancelTroughWeight(TroughWeightId, element);
     });
 });
 var _listVehicles = {

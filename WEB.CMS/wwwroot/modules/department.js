@@ -99,9 +99,11 @@ var _department = {
             ;
             if (result.isSuccess) {
                 _msgalert.success(result.message);
-                _department.modal_element.modal('hide');
-                _department.ReLoad();
-                $.magnificPopup.close();
+                setTimeout(function () {
+                    $.magnificPopup.close();
+                    location.reload();
+                }, 1000);
+            
             } else {
                 _msgalert.error(result.message);
             }

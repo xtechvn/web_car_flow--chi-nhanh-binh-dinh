@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Repositories.IRepositories;
+using StackExchange.Redis;
 using System.Security.Claims;
 using Utilities;
 using Utilities.Contants;
@@ -298,10 +299,11 @@ namespace WEB.CMS.Controllers
                 {
                     model.Gender = 1;
                 }
-
+               var User_Role=await _UserRepository.GetDetailUser(Id);
                 ViewBag.DepartmentList = await _DepartmentRepository.GetAll(String.Empty);
                 ViewBag.RoleList = await _RoleRepository.GetAll();
                 ViewBag.UserPosition = _UserRepository.GetUserPositions();
+                ViewBag.RoleId = User_Role!=null && User_Role.RoleIdList.Count > 0 ? User_Role.RoleIdList[0]:0;
                 return View(model);
             }
             catch (Exception ex)

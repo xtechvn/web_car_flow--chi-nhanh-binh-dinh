@@ -93,19 +93,19 @@ $('#grid-data').on('click', 'tr.line-item', function () {
     let isloadajax = JSON.parse(seft.data('ajaxdetail'));
     let colSpan = $('.checkbox-tb-column:checked').length + 1;
 
-    if (!isloadajax) {
-        $.ajax({
-            url: "/user/GetDetail",
-            type: "post",
-            data: { Id: id },
-            success: function (result) {
-                seft.after(result);
-                seft.data('ajaxdetail', "true");
-                $('.info-detail').children('td').attr('colspan', colSpan);
+    //if (!isloadajax) {
+    //    $.ajax({
+    //        url: "/user/GetDetail",
+    //        type: "post",
+    //        data: { Id: id },
+    //        success: function (result) {
+    //            seft.after(result);
+    //            seft.data('ajaxdetail', "true");
+    //            $('.info-detail').children('td').attr('colspan', colSpan);
 
-            }
-        });
-    }
+    //        }
+    //    });
+    //}
 
     $('.info-detail').addClass('mfp-hide');
     $('.info-detail').children('td').attr('colspan', colSpan);
@@ -438,7 +438,6 @@ var _user = {
                 list_file.push(item)
             });
             */
-            _global_function.AddLoading()
             $.ajax({
                 url: '/user/upsert',
                 type: 'POST',
@@ -446,12 +445,14 @@ var _user = {
                 processData: false,
                 contentType: false,
                 success: function (result) {
-                    _global_function.RemoveLoading()
-                    if (result.isSuccess) {
+                    if (result.isSuccess == true) {
                         _msgalert.success(result.message);
-                        _user.ReLoad();
-                        _user.modal_element.modal('hide');
-                        $.magnificPopup.close();
+
+                        setTimeout(function () {
+                            $.magnificPopup.close();
+                            location.reload();
+                        }, 1000);
+                       
                     } else {
                         _msgalert.error(result.message);
                     }
