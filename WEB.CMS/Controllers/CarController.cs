@@ -1033,6 +1033,14 @@ namespace WEB.CMS.Controllers
                 model.VehicleArrivalDate = DateTime.Now;
                 model.ProtectNotes = note;
                 var update = await _vehicleInspectionRepository.UpdateCar(model);
+                if (status == (int)VehicleStatus.Da_Den_NM)
+                {
+                    await _hubContext.Clients.All.SendAsync("ListCartoFactory_Da_SL", detail);
+                }
+                else
+                {
+                    await _hubContext.Clients.All.SendAsync("ListCartoFactory", detail);
+                }
                 if (update > 0)
                 {
                     return Ok(new
