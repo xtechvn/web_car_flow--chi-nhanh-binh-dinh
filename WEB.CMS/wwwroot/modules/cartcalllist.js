@@ -326,6 +326,7 @@ $(document).ready(function () {
         { Description: "Máng 6", CodeValue: "6" },
         { Description: "Máng 7", CodeValue: "7" },
         { Description: "Máng 8", CodeValue: "8" },
+        { Description: "Hàng xá", CodeValue: "9" },
         // Add more objects as needed
     ];
     const AllCode2 = [
@@ -795,7 +796,7 @@ var _cartcalllist = {
     // ✅ Đồng bộ trạng thái máng khi load trang hoặc reload data
     initMangStatus: function () {
         // Giả sử có 5 máng, bạn thay bằng số máng thực tế
-        for (let mangIndex = 1; mangIndex <= 8; mangIndex++) {
+        for (let mangIndex = 1; mangIndex <= 9; mangIndex++) {
             let mangName = "Máng " + mangIndex;
 
             // 🔎 Kiểm tra xem có xe nào trong máng này chưa hoàn thành không

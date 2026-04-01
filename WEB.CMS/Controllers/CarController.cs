@@ -163,10 +163,34 @@ namespace WEB.CMS.Controllers
             }
             return PartialView();
         }
-        public IActionResult CallTheScale()
+        public async Task<IActionResult> CallTheScale()
         {
             try
             {
+                var model = new CartoFactorySearchModel()
+                {
+                    VehicleNumber = "",
+                    PhoneNumber = "",
+                    VehicleStatus = "0",
+                    LoadType = null,
+                    VehicleWeighingType = "0",
+                    VehicleTroughStatus = null,
+                    TroughType = null,
+                    VehicleWeighingStatus = null,
+                    LoadingStatus = 0,
+                    VehicleWeighedstatus = 0,
+                    type = 0,
+                };
+                var data = await _vehicleInspectionRepository.GetListVehicleCarCallList(model);
+                ViewBag.input1 = data != null && data.Count > 0 ? (data.Where(s => s.TroughType == 1).ToList().Count <= 0 ? 0 : 1) : 0;
+                ViewBag.input2 = data != null && data.Count > 0 ? (data.Where(s => s.TroughType == 2).ToList().Count <= 0 ? 0 : 1) : 0;
+                ViewBag.input3 = data != null && data.Count > 0 ? (data.Where(s => s.TroughType == 3).ToList().Count <= 0 ? 0 : 1) : 0;
+                ViewBag.input4 = data != null && data.Count > 0 ? (data.Where(s => s.TroughType == 4).ToList().Count <= 0 ? 0 : 1) : 0;
+                ViewBag.input5 = data != null && data.Count > 0 ? (data.Where(s => s.TroughType == 5).ToList().Count <= 0 ? 0 : 1) : 0;
+                ViewBag.input6 = data != null && data.Count > 0 ? (data.Where(s => s.TroughType == 6).ToList().Count <= 0 ? 0 : 1) : 0;
+                ViewBag.input7 = data != null && data.Count > 0 ? (data.Where(s => s.TroughType == 7).ToList().Count <= 0 ? 0 : 1) : 0;
+                ViewBag.input8 = data != null && data.Count > 0 ? (data.Where(s => s.TroughType == 8).ToList().Count <= 0 ? 0 : 1) : 0;
+                ViewBag.input9 = data != null && data.Count > 0 ? (data.Where(s => s.TroughType == 9).ToList().Count <= 0 ? 0 : 1) : 0;
                 return View();
             }
             catch (Exception ex)
@@ -386,7 +410,7 @@ namespace WEB.CMS.Controllers
                                 }
                                 else
                                 {
-                                    if (detail.LoadType == (int)LoadType.Xanh|| detail.LoadType == (int)LoadType.Do)
+                                    if (detail.LoadType == (int)LoadType.Xanh || detail.LoadType == (int)LoadType.Do)
                                     {
                                         await _hubContext.Clients.All.SendAsync("ListCallTheScale_0", detail);
                                     }
@@ -495,30 +519,30 @@ namespace WEB.CMS.Controllers
                                     model_TroughWeight.EndDate = DateTime.Now;
                                     _vehicleInspectionRepository.InsertTroughWeight(model_TroughWeight);
                                 }
-                                  
-                                
-                                
+
+
+
                             }
 
                             if (status == (int)VehicleTroughStatus.Ngat_mang)
                             {
                                 model.VehicleTroughTimeComeOut = DateTime.Now;
-                              
-                                    var model_TroughWeight = new TroughWeight();
-                                    model_TroughWeight.VehicleInspectionId = id;
-                                    model_TroughWeight.TroughType = detail.TroughType;
-                                    model_TroughWeight.VehicleTroughWeight = weight;
-                                    model_TroughWeight.CreatedBy = _UserId;
-                                    model_TroughWeight.StartDate = model.VehicleTroughTimeComeIn;
-                                    model_TroughWeight.EndDate = DateTime.Now;
-                                    _vehicleInspectionRepository.InsertTroughWeight(model_TroughWeight);
-                                
-                               
+
+                                var model_TroughWeight = new TroughWeight();
+                                model_TroughWeight.VehicleInspectionId = id;
+                                model_TroughWeight.TroughType = detail.TroughType;
+                                model_TroughWeight.VehicleTroughWeight = weight;
+                                model_TroughWeight.CreatedBy = _UserId;
+                                model_TroughWeight.StartDate = model.VehicleTroughTimeComeIn;
+                                model_TroughWeight.EndDate = DateTime.Now;
+                                _vehicleInspectionRepository.InsertTroughWeight(model_TroughWeight);
+
+
                             }
                             model.VehicleTroughStatus = status;
                             model.VehicleTroughWeight = weight; // ✅ lấy từ input
                             model.Note = Note;
-        
+
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if (UpdateCar > 0)
                             {
@@ -700,7 +724,7 @@ namespace WEB.CMS.Controllers
                     case 10:
                         {
 
-                            model.LoadingType = status;                   
+                            model.LoadingType = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
 
                             if (UpdateCar > 0)
@@ -913,11 +937,11 @@ namespace WEB.CMS.Controllers
                     var audio = await _vehicleInspectionRepository.GetAudioPathByVehicleNumber(VehicleNumber);
                     model.AudioPath = audio;
                 }
-             
+
                 var Update = await _vehicleInspectionRepository.UpdateCar(model);
                 if (Update > 0)
                 {
-                    if(VehicleNumber != null &&( model.AudioPath == null || model.AudioPath == ""))
+                    if (VehicleNumber != null && (model.AudioPath == null || model.AudioPath == ""))
                     {
                         var request = new RegistrationRecord();
                         request.Id = id;
@@ -984,7 +1008,7 @@ namespace WEB.CMS.Controllers
                 msg = "cập nhật không thành công"
             });
         }
-        public async Task<IActionResult> UpdateRegisteredVehicle(int id, int status,string note=null)
+        public async Task<IActionResult> UpdateRegisteredVehicle(int id, int status, string note = null)
         {
             try
             {
@@ -1078,7 +1102,7 @@ namespace WEB.CMS.Controllers
         {
             try
             {
-                var SearchModel=new CartoFactorySearchModel();
+                var SearchModel = new CartoFactorySearchModel();
                 int _UserId = 0;
                 if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
                 {

@@ -1,5 +1,6 @@
 $(document).ready(function () {
     _Call_The_Scale.init();
+    _Call_The_Scale.initMangStatus();
    
     $(document).on('click', '.open-audio', function (e) {
         // 'this' chính là phần tử .open-audio được click
@@ -265,6 +266,31 @@ $(document).ready(function () {
         .then(() => console.log("✅ SignalR connected"))
         .catch(err => console.error(err));
 
+    // Nhận data từ server (SignalR)
+    connection.off("UpdateMangStatus");
+    connection.on("UpdateMangStatus", function (oldMangId, newMangId, carId) {
+        // ✅ Update máng mới thành "Đang xử lý"
+        if (newMangId !== null && newMangId !== undefined) {
+            _Call_The_Scale.updateMangStatus(newMangId, "Đang xử lý");
+        }
+
+        // ✅ Kiểm tra máng cũ: nếu không còn xe nào ở máng đó thì reset về "Trống"
+        if (oldMangId !== null && oldMangId !== undefined && oldMangId != newMangId) {
+            _Call_The_Scale.initMangStatus();
+        }
+
+        // ✅ Update luôn dropdown text trong bảng cho xe đó
+        const $row = $(".CartoFactory_" + carId);
+        if ($row.length) {
+            $row.find(".dropdown-toggle[data-type='1']").text("Máng " + (parseInt(newMangId)));
+        }
+    });
+
+    connection.off("ListCarCall");
+    connection.on("ListCarCall", function (item) {
+        _Call_The_Scale.initMangStatus();
+    });
+
     const AllCode = [
         { Description: "Blank", CodeValue: "1" },
         { Description: "Đã vào cân", CodeValue: "0" },
@@ -383,6 +409,7 @@ $(document).ready(function () {
         $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow_Da_SL(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+        _Call_The_Scale.initMangStatus();
     });
     connection.off("ListCallTheScale_0");
     connection.on("ListCallTheScale_0", function (item) {
@@ -390,6 +417,7 @@ $(document).ready(function () {
         $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
+        _Call_The_Scale.initMangStatus();
     });
     connection.off("ListCallTheScale_1");
     connection.on("ListCallTheScale_1", function (item) {
@@ -397,6 +425,7 @@ $(document).ready(function () {
         $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
+        _Call_The_Scale.initMangStatus();
     });
     //sử lý đăng tải
     connection.off("ListProcessingIsLoading_Da_SL");
@@ -426,6 +455,8 @@ $(document).ready(function () {
         tbody.insertAdjacentHTML("beforeend", renderRow_Da_SL(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
+
+
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);
     });
@@ -447,6 +478,43 @@ $(document).ready(function () {
     }
 });
 var _Call_The_Scale = {
+    // ✅ Hàm đồng bộ máng khi vừa load trang hoặc reload data
+    initMangStatus: function () {
+        for (let mangIndex = 1; mangIndex <= 8; mangIndex++) {
+            let mangName = "Máng " + mangIndex;
+
+            // 🔎 Kiểm tra trong tất cả các tbody có thể có (0-0, 0-1, 1)
+            let stillHasCar = $("#dataBody-0-0 tr, #dataBody-0-1 tr, #dataBody-1 tr").toArray().some(tr => {
+                let btnText = $(tr).find("button[data-type='1']").text().replace(/\s+/g, ' ').trim();
+                let pText = $(tr).find("p").text().replace(/\s+/g, ' ').trim();
+                let text = btnText || pText;
+
+                let trangThai = $(tr).find("td:last .dropdown-toggle").text().trim();
+                return text === mangName && trangThai !== "Hoàn thành" && trangThai !== "Bỏ lượt";
+            });
+
+            if (stillHasCar) {
+                _Call_The_Scale.updateMangStatus(mangIndex, "Đang xử lý");
+            } else {
+                _Call_The_Scale.updateMangStatus(mangIndex, "Trống");
+            }
+        }
+    },
+
+    // ✅ Hàm cập nhật input trạng thái máng
+    updateMangStatus: function (mangIndex, statusText) {
+        const $input = $("#input" + mangIndex);
+
+        if ($input.length) {
+            $input.val(statusText);
+
+            if (statusText === "Trống") {
+                $input.removeClass("processing").addClass("empty");
+            } else {
+                $input.removeClass("empty").addClass("processing");
+            }
+        }
+    },
     init: function () {
         _Call_The_Scale.ListCallTheScale();
         _Call_The_Scale.ListCallTheScale_2();
@@ -472,6 +540,7 @@ var _Call_The_Scale = {
             success: function (result) {
                 $('#imgLoading').hide();
                 $('#Call_The_Scale_Chua_SL').html(result);
+                _Call_The_Scale.initMangStatus();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus);
@@ -498,6 +567,7 @@ var _Call_The_Scale = {
             success: function (result) {
                 $('#imgLoading').hide();
                 $('#Call_The_Scale_Chua_SL_2').html(result);
+                _Call_The_Scale.initMangStatus();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus);
@@ -524,6 +594,7 @@ var _Call_The_Scale = {
             success: function (result) {
                 $('#imgLoading').hide();
                 $('#Call_The_Scale_Da_SL').html(result);
+                _Call_The_Scale.initMangStatus();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus);
