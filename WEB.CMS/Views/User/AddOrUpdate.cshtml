@@ -103,10 +103,10 @@
             </div>
 
             <!-- Phòng ban -->
-            <div class="form-group">
+            <div class="form-group" style="display:none">
                 <label>Phòng ban <span>*</span></label>
-                <select class="DepartmentId" asp-for="@Model.DepartmentId" id="DepartmentId" name="DepartmentId">
-                    @if (_DepartmentList != null && _DepartmentList.Any())
+                <select class="DepartmentId" asp-for="Model.DepartmentId" id="DepartmentId" name="DepartmentId">
+                    if (_DepartmentList != null && _DepartmentList.Any())
                     {
                         var depParents = _DepartmentList.Where(s => s.ParentId == 0);
                         foreach (var item in depParents)
@@ -118,20 +118,20 @@
             </div>
 
             <!-- Chức vụ -->
-            <div class="form-group">
+            <div class="form-group" style="display:none">
                 <label>Chức vụ <span>*</span></label>
-                <select class="UserPositionId" asp-for="@Model.UserPositionId" id="UserPositionId" name="UserPositionId">
-                    @if (_UserPosition != null && _UserPosition.Any())
+                <select class="UserPositionId" asp-for="Model.UserPositionId" id="UserPositionId" name="UserPositionId">
+                    if (_UserPosition != null && _UserPosition.Any())
                     {
                         foreach (var item in _UserPosition)
                         {
                             if (Model.UserPositionId == item.Id)
                             {
-                                <option value="@item.Id" data-lvl="@item.Rank" selected="selected">@item.Name</option>
+                                <option value="item.Id" data-lvl="item.Rank" selected="selected">item.Name</option>
                             }
                             else
                             {
-                                <option value="@item.Id" data-lvl="@item.Rank">@item.Name</option>
+                                <option value="item.Id" data-lvl="item.Rank">item.Name</option>
                             }
                         }
                     }
@@ -231,10 +231,10 @@
             </div>
 
             <!-- Phòng ban -->
-            <div class="form-group">
+            <div class="form-group" style="display:none">
                 <label>Phòng ban <span>*</span></label>
-                <select class="DepartmentId" asp-for="@Model.DepartmentId" id="DepartmentId" name="DepartmentId">
-                    @if (_DepartmentList != null && _DepartmentList.Any())
+                <select class="DepartmentId" asp-for="Model.DepartmentId" id="DepartmentId" name="DepartmentId">
+                    if (_DepartmentList != null && _DepartmentList.Any())
                     {
                         var depParents = _DepartmentList.Where(s => s.ParentId == 0);
                         foreach (var item in depParents)
@@ -246,20 +246,20 @@
             </div>
 
             <!-- Chức vụ -->
-            <div class="form-group">
+            <div class="form-group" style="display:none">
                 <label>Chức vụ <span>*</span></label>
-                <select class="UserPositionId" asp-for="@Model.UserPositionId" id="UserPositionId" name="UserPositionId">
-                    @if (_UserPosition != null && _UserPosition.Any())
+                <select class="UserPositionId" asp-for="Model.UserPositionId" id="UserPositionId" name="UserPositionId">
+                    if (_UserPosition != null && _UserPosition.Any())
                     {
                         foreach (var item in _UserPosition)
                         {
                             if (Model.UserPositionId == item.Id)
                             {
-                                <option value="@item.Id" data-lvl="@item.Rank" selected="selected">@item.Name</option>
+                                <option value="item.Id" data-lvl="item.Rank" selected="selected">item.Name</option>
                             }
                             else
                             {
-                                <option value="@item.Id" data-lvl="@item.Rank">@item.Name</option>
+                                <option value="item.Id" data-lvl="item.Rank">item.Name</option>
                             }
                         }
                     }

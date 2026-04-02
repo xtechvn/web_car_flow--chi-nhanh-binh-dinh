@@ -18,8 +18,8 @@
                 <th>Ngày sinh</th>
                 <th>Email</th>
                 <th>Vai trò</th>
-                <th>Phòng ban</th>
-                <th>Chức vụ</th>
+               @*  <th>Phòng ban</th>
+                <th>Chức vụ</th> *@
          
                 <th>Trạng thái</th>
                 <th>Ngày tạo</th>
@@ -58,8 +58,8 @@
                     <td>@(item.BirthDay == null ? "N/A" : ((DateTime)item.BirthDay).ToString("dd/MM/yyyy"))</td>
                     <td>@item.Email</td>
                     <td>@item.UserRoleName </td>
-                    <td>@item.UserDepartmentName </td>
-                    <td>@item.UserPositionName </td>
+                 @*    <td>@item.UserDepartmentName </td>
+                    <td>@item.UserPositionName </td> *@
 
                     <td>@(item.Status == 1 ? "Tạm ngừng" : "Đang hoạt động")</td>
                     <td>@(item.CreatedOn == null ? "N/A" : ((DateTime)item.CreatedOn).ToString("dd/MM/yyyy"))</td>
@@ -82,9 +82,9 @@ else
                 <th>Ngày sinh</th>
                 <th>Email</th>
                 <th>Vai trò</th>
-                <th>Phòng ban</th>
+               @*  <th>Phòng ban</th>
                 <th>Chức vụ</th>
-
+ *@
                 <th>Trạng thái</th>
                 <th>Ngày tạo</th>
             </tr>
