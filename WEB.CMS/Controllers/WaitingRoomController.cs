@@ -1,4 +1,4 @@
-﻿using Entities.ViewModels.Car;
+using Entities.ViewModels.Car;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -20,6 +20,10 @@ namespace WEB.CMS.Controllers
 
         }
         public IActionResult Index()
+        {
+            return View();
+        }
+        public IActionResult CarCall()
         {
             return View();
         }
