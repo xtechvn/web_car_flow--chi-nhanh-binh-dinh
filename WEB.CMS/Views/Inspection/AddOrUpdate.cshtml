@@ -102,7 +102,7 @@
         rest = rest.slice(letters.length);
 
         // 5 số cuối
-        let numbers = rest.replace(/\D/g, '').slice(0, 5);
+        let numbers = rest.match(/^\d{0,20}/)?.[0] || '';
 
         let result = province + letters;
 

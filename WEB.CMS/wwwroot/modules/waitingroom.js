@@ -146,6 +146,14 @@ $(document).ready(function () {
         tbody.insertAdjacentHTML("beforeend", renderRow_DA_SL(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
+    // Nhận data mới từ server
+    connection.off("ListCallTheScale_Da_SL");
+    connection.on("ListCallTheScale_Da_SL", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        $('.waiting_room_' + item.id).remove();
+        tbody.insertAdjacentHTML("beforeend", renderRow_Da_SL(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
     connection.onclose(error => {
         console.error("❌ Kết nối bị đóng.", error);
     });
