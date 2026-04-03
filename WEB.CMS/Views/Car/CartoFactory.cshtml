@@ -11,9 +11,9 @@
             </svg>
         </a>
         <h2 class="table-title">Danh sách xe đăng ký</h2>
-         <a class="btn-search btn-default settings-btn" type="button" onclick="_cartofactory.Export()" id="btnExport" style="height: 38px; display: flex; align-items: center; padding: 0 16px; border-radius: 8px; border: 1px solid #d0d5dd; background: #fff; font-size: 14px; color: #444; margin-right: 15px;">
-               xuất file Excel
-            </a>
+        <a class="btn-search btn-default settings-btn" type="button" onclick="_cartofactory.Export()" id="btnExport" style="height: 38px; display: flex; align-items: center; padding: 0 16px; border-radius: 8px; border: 1px solid #d0d5dd; background: #fff; font-size: 14px; color: #444; margin-right: 15px;">
+            xuất file Excel
+        </a>
         <div class="table-search">
             <input type="text" id="input_chua_xu_ly" placeholder="Tìm kiếm">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -46,6 +46,19 @@
         <div class="ss-wrapper">
             <div class="ss-content">
                 <div id="data_da_xu_ly"></div>
+            </div>
+        </div><div class="ss-scroll ss-hidden"></div>
+    </div>
+    <div id="dropdown-container"></div>
+    <div class="table-head">
+        <h2 class="table-title">Danh sách xe rác</h2>
+       
+    </div>
+
+    <div class="table-wrapper simple-scrollbar ss-container" style="height: 310px;">
+        <div class="ss-wrapper">
+            <div class="ss-content">
+                <div id="data_rac"></div>
             </div>
         </div><div class="ss-scroll ss-hidden"></div>
     </div>

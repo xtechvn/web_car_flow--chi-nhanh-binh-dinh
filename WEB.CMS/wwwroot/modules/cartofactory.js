@@ -210,6 +210,7 @@ $(document).ready(function () {
     const AllCode = [
         { Description: "Blank", CodeValue: "1" },
         { Description: "Đã đến nhà máy", CodeValue: "0" },
+        { Description: "Xe rác", CodeValue: "2" },
         // Add more objects as needed
     ];
     const AllCode2 = [
@@ -431,6 +432,13 @@ $(document).ready(function () {
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
+    connection.off("ListCartoFactory_rac");
+    connection.on("ListCartoFactory_rac", function (item) {
+        const tbody = document.getElementById("dataBody-2");
+        $('.CartoFactory_' + item.id).remove();
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable(); // sắp xếp lại ngay khi thêm
+    });
     connection.off("ReceiveRegistration");
     connection.on("ReceiveRegistration", function (item) {
         const tbody = document.getElementById("dataBody-0");
@@ -496,6 +504,7 @@ var _cartofactory = {
     init: function () {
         _cartofactory.ListCartoFactory();
         _cartofactory.ListCartoFactory_Da_SL();
+        _cartofactory.ListCartoFactory_rac();
     },
     ListCartoFactory: function () {
         var model = {
@@ -541,6 +550,31 @@ var _cartofactory = {
             success: function (result) {
                 $('#imgLoading').hide();
                 $('#data_da_xu_ly').html(result);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log("Status: " + textStatus);
+            }
+        });
+    },
+    ListCartoFactory_rac: function () {
+        var model = {
+            VehicleNumber:  "",
+            PhoneNumber:  "",
+            VehicleStatus: 2,
+            LoadType: null,
+            VehicleWeighingType: null,
+            VehicleTroughStatus: null,
+            TroughType: null,
+            VehicleWeighingStatus: null,
+            type: 2,
+        }
+        $.ajax({
+            url: "/Car/ListCartoFactory",
+            type: "post",
+            data: { SearchModel: model },
+            success: function (result) {
+                $('#imgLoading').hide();
+                $('#data_rac').html(result);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus);

@@ -4,6 +4,7 @@
     {
         Da_Den_NM = 0,
         Blank = 1,
+        Rac = 2,
     } 
     public enum VehicleWeighingType
     {

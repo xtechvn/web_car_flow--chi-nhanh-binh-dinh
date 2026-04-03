@@ -56,9 +56,7 @@ $(document).ready(function () {
 
             <td> ${item.csNotes == null ? '' : item.csNotes} </td>
            <td>${html_tt}</td>
-              <td>
-                  ${item.rankName == null ? '' : item.rankName}
-            </td>
+  
             <td>
                  ${item.loadTypeName == null ? '' : item.loadTypeName}
             </td>

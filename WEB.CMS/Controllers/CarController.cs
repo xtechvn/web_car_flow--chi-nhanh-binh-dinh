@@ -331,7 +331,8 @@ namespace WEB.CMS.Controllers
                                 }
                                 else
                                 {
-                                    await _hubContext.Clients.All.SendAsync("ListCartoFactory", detail);
+                                    await _hubContext.Clients.All.SendAsync(status == (int)VehicleStatus.Rac ? "ListCartoFactory_rac" : "ListCartoFactory", detail);
+
                                 }
                             }
                         }
