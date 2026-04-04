@@ -476,9 +476,9 @@ var _Call_The_Scale = {
             $input.val(statusText);
 
             if (statusText === "Trống") {
-                $input.removeClass("processing").addClass("empty");
+                $input.removeClass("processing").addClass("empty").css({"background": "", "color": ""});
             } else {
-                $input.removeClass("empty").addClass("processing");
+                $input.removeClass("empty").addClass("processing").css({"background": "red", "color": "white"});
             }
         }
     },
