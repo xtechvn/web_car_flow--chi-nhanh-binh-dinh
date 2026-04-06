@@ -111,7 +111,7 @@ $(document).ready(function () {
             const loadType = cells[7].innerText.trim();
             
             // Assume "Dock" might be in the note or default to "CHỜ..."
-            let dock = "CHỜ...";
+            let dock = "";
             if (note.toUpperCase().includes("DOCK")) {
                 const match = note.match(/DOCK\s*(\d+)/i);
                 if (match) dock = match[0].toUpperCase();
@@ -128,10 +128,7 @@ $(document).ready(function () {
                     <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                     <span>${driver}</span>
                 </div>
-                <div class="car-card-footer">
-                    <span class="load-type">${loadType || 'N/A'}</span>
-                    ${index === 0 ? '<button class="btn-call">Gọi vào</button>' : '<button class="btn-notify">Thông báo</button>'}
-                </div>
+                
             </div>`;
         });
 

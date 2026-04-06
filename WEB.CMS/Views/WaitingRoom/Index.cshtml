@@ -1,4 +1,28 @@
-﻿<main class="main-section">
+﻿
+<style>
+.badge-processing {
+    background: #FFC107 !important;
+    color: #000 !important;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.badge-done {
+    background: #28A745 !important;
+    color: #fff !important;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+.badge-done .data-table th{
+    background: #28A745 !important;
+    color: #fff !important;
+}
+.badge-processing .data-table th{
+    background: #FFC107 !important;
+    color: #000 !important;
+}
+</style>
+<main class="main-section">
 
 
     <div class="table-head">
@@ -28,7 +52,7 @@
 
     <div class="table-wrapper simple-scrollbar ss-container" style="height: 100%!important;min-height:400px!important;" >
         <div class="ss-wrapper">
-            <div id="Processing_Is_Loading" class="ss-content">
+            <div id="Processing_Is_Loading" class="ss-content badge-processing">
 
             </div>
         </div>
@@ -40,7 +64,7 @@
 
     <div class="table-wrapper simple-scrollbar ss-container" style="height: 100%!important;min-height:400px!important;" >
         <div class="ss-wrapper">
-            <div id="Processing_Is_Loading_Da_SL" class="ss-content">
+            <div id="Processing_Is_Loading_Da_SL" class="ss-content badge-done">
 
             </div>
         </div>
