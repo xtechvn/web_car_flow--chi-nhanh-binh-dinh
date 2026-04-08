@@ -46,22 +46,8 @@ $(document).ready(function () {
                       ${item.customerName} 
                  </div>
             </div>
-          
             </td>
-            <td>
-                <div>${item.driverName}</div>
-                <div>${item.phoneNumber}</div>
-            </td>
-           
-
             <td> ${item.csNotes == null ? '' : item.csNotes} </td>
-           <td>${html_tt}</td>
-  
-            <td>
-                 ${item.loadTypeName == null ? '' : item.loadTypeName}
-            </td>
-
-
         </tr>`;
     }
     function sortTable() {

@@ -108,6 +108,10 @@ namespace WEB.CMS.Controllers
                 return Content("");
             }
 
+        } 
+        public IActionResult SafetyNotice()
+        {
+            return View();
         }
 
     }

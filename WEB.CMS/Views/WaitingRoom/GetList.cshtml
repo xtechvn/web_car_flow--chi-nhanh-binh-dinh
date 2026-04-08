@@ -50,10 +50,7 @@
                 <th>Giờ xe đến</th>
                 <th>Biển số xe</th>
                 <th style="min-width:250px;">Tên khách hàng (Trại, đại lý)</th>
-                <th>Tên lái xe</th>
                 <th>CS ghi chú</th>
-                <th>TT đăng kiểm</th>
-                <th>Nhóm tài</th>
             </tr>
         </thead>
         <tbody id="dataBody-@ViewBag.type">
@@ -71,14 +68,8 @@
                         <div style="display: flex; align-items: center">
                             <div style="white-space: pre-line;">
                                 @item.CustomerName
-
                             </div>
                         </div>
-                    </td>
-                    <td>
-                        <div>@item.DriverName</div>
-                        <div>@item.PhoneNumber</div>
-
                     </td>
                     <td>
                         <div style="display: flex; align-items: center">
@@ -87,39 +78,8 @@
                             </div>                      
                         </div> 
                     </td>
-                    <td>
-                        @{
-                            switch (item.TrangThai)
-                            {
-                                case 1:
-                                    <span class="badge badge-warning">Chưa có</span>
-                                    break;
-                                case 2:
-                                    <span class="badge badge-success">Còn hạn</span>
-                                    break;
-                                case 3:
-                                    @:<span class="badge badge-warning">Sắp hết hạn</span>
-                                    break;
-                                case 4:
-                                    @:<span class="badge badge-danger">Hết hạn</span>
-                                    break;
-
-                            }
-                        }
-                        
-                    </td>
-
-                    <td>
-                        <div>
-                            <p>
-                                @item.LoadTypeName
-                            </p>
-                        </div>
-                    </td>
                 </tr>
-
             }
-
         </tbody>
     </table>
 }
@@ -132,11 +92,7 @@ else
                 <th>Giờ xe đến</th>
                 <th>Biển số xe</th>
                 <th>Tên khách hàng (Trại, đại lý)</th>
-                <th>Tên lái xe</th>
                 <th>CS ghi chú</th>
-                <th>TT đăng kiểm</th>      
-                <th>KH nội bộ</th>
-                <th>Nhóm tài</th>            
             </tr>
         </thead>
         <tbody id="dataBody-@ViewBag.type">

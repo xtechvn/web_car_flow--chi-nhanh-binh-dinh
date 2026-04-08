@@ -1,17 +1,61 @@
 ﻿
 <style>
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.main-section {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.two-panel-layout {
+    display: flex;
+    flex: 1;
+    gap: 8px;
+    overflow: hidden;
+    padding: 0 8px 8px;
+}
+
+.panel-col {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.panel-title {
+    font-weight: 600;
+    font-size: 15px;
+    padding: 6px 0;
+    margin: 0;
+}
+
+.panel-title.processing {
+    color: #856404;
+}
+
+.panel-title.done {
+    color: #155724;
+}
+
+.panel-scroll {
+    flex: 1;
+    overflow-y: auto;
+    border-radius: 6px;
+}
+
 .badge-processing {
     background: #FFC107 !important;
     color: #000 !important;
-    padding: 4px 8px;
-    border-radius: 6px;
 }
 
 .badge-done {
     background: #28A745 !important;
     color: #fff !important;
-    padding: 4px 8px;
-    border-radius: 6px;
 }
 .badge-done .data-table th{
     background: #28A745 !important;
@@ -24,14 +68,13 @@
 </style>
 <main class="main-section">
 
-
     <div class="table-head">
         <a href="/" class="btn-back">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
         </a>
-        <h2 class="table-title">Danh sách xe đang chờ xử lý </h2>
+        <h2 class="table-title">Danh sách xe</h2>
         <div class="table-search">
             <input type="text" id="input_Processing_Is_Loading_Chua_SL" placeholder="Tìm kiếm">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -39,33 +82,27 @@
             </svg>
         </div>
     </div>
-    <div id="magnific-popup-small" class="popup-form  white-popup mfp-hide">
+
+    <div id="magnific-popup-small" class="popup-form white-popup mfp-hide">
         <div class="round_lighbox">
             <div class="content_lightbox">
                 <div class="title-popup magnific-title" id="Data_Tile"></div>
-                <div class="form-user-modern  magnific-body" id="Data_Body">
-
-                </div>
+                <div class="form-user-modern magnific-body" id="Data_Body"></div>
             </div>
         </div>
     </div>
 
-    <div class="table-wrapper simple-scrollbar ss-container" style="height: 100%!important;min-height:400px!important;" >
-        <div class="ss-wrapper">
-            <div id="Processing_Is_Loading" class="ss-content badge-processing">
-
+    <div class="two-panel-layout">
+        <div class="panel-col">
+            <h2 class="panel-title processing">Đang chờ xử lý</h2>
+            <div class="panel-scroll">
+                <div id="Processing_Is_Loading" class="badge-processing"></div>
             </div>
         </div>
-    </div>
-<div class="table-head">
-        <h2 class="table-title">Đã xử lý</h2>
-</div>
-
-
-    <div class="table-wrapper simple-scrollbar ss-container" style="height: 100%!important;min-height:400px!important;" >
-        <div class="ss-wrapper">
-            <div id="Processing_Is_Loading_Da_SL" class="ss-content badge-done">
-
+        <div class="panel-col">
+            <h2 class="panel-title done">Đã xử lý</h2>
+            <div class="panel-scroll">
+                <div id="Processing_Is_Loading_Da_SL" class="badge-done"></div>
             </div>
         </div>
     </div>
