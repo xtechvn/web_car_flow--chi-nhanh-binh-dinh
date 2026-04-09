@@ -1,4 +1,24 @@
 $(document).ready(function () {
+    // Inject CSS fix for 32-inch TV display
+    var tvCss = `
+        .two-panel-layout { min-width: 0; }
+        .panel-col { min-width: 0; }
+        .panel-scroll { overflow-x: hidden; }
+        .panel-scroll .data-table { table-layout: fixed; width: 100%; }
+        .panel-scroll .data-table th,
+        .panel-scroll .data-table td { white-space: normal !important; word-wrap: break-word; overflow-wrap: break-word; vertical-align: top; }
+        .panel-scroll .data-table th:nth-child(1),
+        .panel-scroll .data-table td:nth-child(1) { width: 45px; }
+        .panel-scroll .data-table th:nth-child(2),
+        .panel-scroll .data-table td:nth-child(2) { width: 130px; }
+        .panel-scroll .data-table th:nth-child(3),
+        .panel-scroll .data-table td:nth-child(3) { width: 90px; }
+        .panel-scroll .data-table th:nth-child(4) { width: auto; }
+        .panel-scroll .data-table th:nth-child(5),
+        .panel-scroll .data-table td:nth-child(5) { width: 30%; }
+    `;
+    $('<style>').text(tvCss).appendTo('head');
+
     _waiting_room.GetList();
     _waiting_room.GetList_Da_SL();
     const connection = new signalR.HubConnectionBuilder()
