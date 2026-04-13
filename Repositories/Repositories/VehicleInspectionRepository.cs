@@ -597,7 +597,7 @@ namespace Repositories.Repositories
                             ws.Cells.Merge(startRow - 1, 10, totalRow, 1); // K
                             ws.Cells.Merge(startRow - 1, 11, totalRow, 1); // L
                         }
-
+                        RowIndex++;
 
                     }
 
