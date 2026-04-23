@@ -10,33 +10,33 @@
     <link rel="stylesheet" href="~/css/style_web_car_flow.css" />
 </head>
 <style>
-   .customer-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 6px;
-}
+    .customer-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 6px;
+    }
 
-.customer-row input {
-    height: 34px;
-    padding: 4px 8px;
-}
+        .customer-row input {
+            height: 34px;
+            padding: 4px 8px;
+        }
 
-.code-input {
-    width: 30%;
-}
+    .code-input {
+        width: 30%;
+    }
 
-.name-input {
-    width: 55%;
-}
+    .name-input {
+        width: 55%;
+    }
 
-.btn-remove {
-    background: #ff4d4f;
-    color: #fff;
-    border: none;
-    padding: 0 10px;
-    cursor: pointer;
-    border-radius: 4px;
-}
+    .btn-remove {
+        background: #ff4d4f;
+        color: #fff;
+        border: none;
+        padding: 0 10px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
 
 </style>
 <body>
@@ -59,13 +59,13 @@
                             <input type="text" name="name[]" class="name-input" placeholder="Nhập tên khách hàng" required>
 
                             <button type="button" class="btn-remove fa fa-trash-o" onclick="removeRow(this)" style="display:none">
-                               X
+                                X
                             </button>
                         </div>
                     </div>
 
                     <a href="javascript:void(0)" onclick="addRow()" title="Thêm dòng">➕ </a>
-                    
+
                 </div>
                 <div class="form-group">
                     <label for="plateNumber">Biển số xe đăng ký <span style="color:red">*</span></label>
@@ -413,13 +413,13 @@
             const nowHM = now.getHours() * 60 + now.getMinutes();
                 const targetHM = checkTime.getHours() * 60 + checkTime.getMinutes();
 
-                if (now.getHours() == checkTime.getHours() && nowHM <= targetHM) {
-                setTimeout(() => {
-                    startCountdown17_18();
-                }, 1000);
+                // if (now.getHours() == checkTime.getHours() && nowHM <= targetHM) {
+                //     setTimeout(() => {
+                //         startCountdown17_18();
+                //     }, 1000);
 
-                return;
-            }
+                //     return;
+                // }
                 // Call API to register car
                 const response = await registerCar(plateNumber, phoneNumber, name, referee, GPLX, Camp, timedow);
 
@@ -501,32 +501,14 @@
 
             // Format input as user types
             document.getElementById('plateNumber').addEventListener('input', function () {
-                // Auto format plate number: 30a12345 -> 30A-12345
-                // Chỉ cho phép số, chữ, dấu -
-                let value = this.value
-                    .replace(/[^0-9A-Za-z]/g, '')
-                    .toUpperCase();
+                  let value = this.value
+                        .toUpperCase()                 // chuyển IN HOA
+                        .replace(/[^0-9A-Z\/]/g, '');  // chỉ giữ chữ, số, /
 
-                // 2 số đầu
-                let province = value.match(/^\d{0,2}/)?.[0] || '';
-                let rest = value.slice(province.length);
+                    // Xóa dấu / thừa (//// → /)
+                    value = value.replace(/\/+/g, '/');
 
-                // 1 hoặc 2 chữ cái
-                let letters = rest.match(/^[A-Z]{0,2}/)?.[0] || '';
-                rest = rest.slice(letters.length);
-
-                // 5 số
-                let numbers = rest.match(/^\d{0,20}/)?.[0] || '';
-
-                let result = province + letters;
-
-                //if (province.length === 2 && letters.length >= 1) {
-                //    result += '-';
-                //}
-
-                result += numbers;
-
-                this.value = result;
+                    this.value = value;
             });
 
             document.getElementById('phoneNumber').addEventListener('input', function () {
@@ -644,41 +626,41 @@
 
 
     </script>
-<script>
-    function addRow() {
-        const container = document.getElementById('customerRows');
+    <script>
+        function addRow() {
+            const container = document.getElementById('customerRows');
 
-        const row = document.createElement('div');
-        row.className = 'customer-row';
+            const row = document.createElement('div');
+            row.className = 'customer-row';
 
-        row.innerHTML = `
-            <input type="text" name="code[]" class="code-input" placeholder="Nhập mã code" required>
-            <input type="text" name="name[]" class="name-input" placeholder="Nhập tên khách hàng" required>
-            <button type="button" class="btn-remove fa fa-trash-o" onclick="removeRow(this)">X</button>
-        `;
+            row.innerHTML = `
+                <input type="text" name="code[]" class="code-input" placeholder="Nhập mã code" required>
+                <input type="text" name="name[]" class="name-input" placeholder="Nhập tên khách hàng" required>
+                <button type="button" class="btn-remove fa fa-trash-o" onclick="removeRow(this)">X</button>
+            `;
 
-        container.appendChild(row);
+            container.appendChild(row);
 
-        updateRemoveButtons();
-    }
+            updateRemoveButtons();
+        }
 
-    function removeRow(btn) {
-        const row = btn.closest('.customer-row');
-        row.remove();
+        function removeRow(btn) {
+            const row = btn.closest('.customer-row');
+            row.remove();
 
-        updateRemoveButtons();
-    }
+            updateRemoveButtons();
+        }
 
-    function updateRemoveButtons() {
-        const rows = document.querySelectorAll('.customer-row');
+        function updateRemoveButtons() {
+            const rows = document.querySelectorAll('.customer-row');
 
-        rows.forEach((row, index) => {
-            const removeBtn = row.querySelector('.btn-remove');
-            // Ẩn nút xóa nếu chỉ còn 1 dòng
-            removeBtn.style.display = rows.length === 1 ? 'none' : 'inline-block';
-        });
-    }
-</script>
+            rows.forEach((row, index) => {
+                const removeBtn = row.querySelector('.btn-remove');
+                // Ẩn nút xóa nếu chỉ còn 1 dòng
+                removeBtn.style.display = rows.length === 1 ? 'none' : 'inline-block';
+            });
+        }
+    </script>
 
 </body>
 </html>
