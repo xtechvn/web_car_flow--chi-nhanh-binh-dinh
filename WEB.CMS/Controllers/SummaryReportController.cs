@@ -1,8 +1,10 @@
-﻿using Entities.ViewModels.Car;
+using Entities.ViewModels.Car;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Nest;
 using Repositories.IRepositories;
 using Repositories.Repositories;
+using System.Security.Claims;
 using Utilities;
 using Utilities.Contants;
 using WEB.CMS.Customize;
@@ -16,11 +18,14 @@ namespace WEB.CMS.Controllers
         private readonly IAllCodeRepository _allCodeRepository;
 
         private readonly IConfiguration _configuration;
-        public SummaryReportController(IVehicleInspectionRepository vehicleInspectionRepository, IConfiguration configuration, IAllCodeRepository allCodeRepository)
+        private readonly IWebHostEnvironment _WebHostEnvironment;
+        public SummaryReportController(IVehicleInspectionRepository vehicleInspectionRepository, IConfiguration configuration,
+            IAllCodeRepository allCodeRepository, IWebHostEnvironment WebHostEnvironment)
         {
             _vehicleInspectionRepository = vehicleInspectionRepository;
             _configuration = configuration;
             _allCodeRepository = allCodeRepository;
+            _WebHostEnvironment = WebHostEnvironment;
         }
         public async Task<IActionResult> Index()
         { 
@@ -166,5 +171,134 @@ namespace WEB.CMS.Controllers
             }
             return PartialView();
         }
+        [HttpPost]
+        public async Task<IActionResult> ExportExcel(SummaryReportSearchModel SearchModel)
+        {
+            try
+            {
+                var FromDate = SearchModel.FromDate != null && SearchModel.FromDate != "" ? DateUtil.StringToDate(SearchModel.FromDate) : null;
+                var ToDate = SearchModel.ToDate != null && SearchModel.ToDate != "" ? DateUtil.StringToDate(SearchModel.ToDate) : null;
+
+                var data = await _vehicleInspectionRepository.GetListVehicleInspectionSynthetic(FromDate, ToDate, SearchModel.LoadType);
+
+               
+                int _UserId = 0;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+                string _FileName = StringHelpers.GenFileName("Danh sách đơn hàng", _UserId, "xlsx");
+                string _UploadFolder = @"Template\Export";
+                string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, _UploadFolder);
+
+                if (!Directory.Exists(_UploadDirectory))
+                {
+                    Directory.CreateDirectory(_UploadDirectory);
+                }
+                //delete all file in folder before export
+                try
+                {
+                    System.IO.DirectoryInfo di = new DirectoryInfo(_UploadDirectory);
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                }
+                catch
+                {
+                }
+                string FilePath = Path.Combine(_UploadDirectory, _FileName);
+
+                var rsPath = await _vehicleInspectionRepository.ExportSummaryReport(data, FilePath);
+
+                if (!string.IsNullOrEmpty(rsPath))
+                {
+                    return new JsonResult(new
+                    {
+                        isSuccess = true,
+                        message = "Xuất dữ liệu thành công",
+                        path = "/" + _UploadFolder + "/" + _FileName
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        isSuccess = false,
+                        message = "Xuất dữ liệu thất bại"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("ExportExcel - OrderController: " + ex);
+                return new JsonResult(new
+                {
+                    isSuccess = false,
+                    message = ex.Message.ToString()
+                });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> ExportExe(SummaryReportSearchModel SearchModel)
+        {
+            try
+            {
+                var FromDate = SearchModel.FromDate != null && SearchModel.FromDate != "" ? DateUtil.StringToDate(SearchModel.FromDate) : null;
+                var ToDate   = SearchModel.ToDate != null && SearchModel.ToDate != "" ? DateUtil.StringToDate(SearchModel.ToDate) : null;
+
+                var data = await _vehicleInspectionRepository.GetListVehicleInspectionSynthetic(FromDate, ToDate, SearchModel.LoadType);
+
+                int _UserId = 0;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+
+                // Tên file exe, ví dụ: Report_123_20240428.exe
+                string _FileName = StringHelpers.GenFileName("Report", _UserId, "exe");
+                string _UploadFolder = @"Template\\Export";
+                string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, _UploadFolder);
+
+                if (!Directory.Exists(_UploadDirectory))
+                {
+                    Directory.CreateDirectory(_UploadDirectory);
+                }
+
+                // Xóa các file .exe cũ trong thư mục
+                try
+                {
+                    foreach (var file in new DirectoryInfo(_UploadDirectory).GetFiles("*.exe"))
+                    {
+                        file.Delete();
+                    }
+                }
+                catch { }
+
+                string FilePath = Path.Combine(_UploadDirectory, _FileName);
+
+                // Tạo một file exe giả (placeholder). Thực tế bạn có thể sao chép một exe mẫu ở đây.
+                // Đối với demo, ghi một vài byte để tạo file hợp lệ.
+                byte[] dummyExe = new byte[] { 0x4D, 0x5A }; // "MZ" header of Windows exe
+                await System.IO.File.WriteAllBytesAsync(FilePath, dummyExe);
+
+                return new JsonResult(new
+                {
+                    isSuccess = true,
+                    message   = "Xuất file exe thành công",
+                    path      = "/" + _UploadFolder + "/" + _FileName
+                });
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("ExportExe - SummaryReportController: " + ex);
+                return new JsonResult(new
+                {
+                    isSuccess = false,
+                    message   = ex.Message.ToString()
+                });
+            }
+        }
     }
 }
+

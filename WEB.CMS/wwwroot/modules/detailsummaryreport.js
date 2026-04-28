@@ -101,6 +101,36 @@ var _detail_summary_report = {
         }
         _detail_summary_report.GetDailyStatistics(model)
         
-    }
+    },
 
+    Export: function () {
+        var text = $('#date_time_Car').val();
+        parse_value = text.split(' ')[0].split('-')
+        var datetime = parse_value[2] + '/' + parse_value[1] + '/' + parse_value[0];
+        var model = {
+            FromDate: datetime,
+            ToDate: datetime,
+            LoadType: $('#loadType').val(),
+        }
+        $('#btnExport').prop('disabled', true);
+
+        _global_function.AddLoading()
+        $.ajax({
+            url: "/SummaryReport/ExportExcel",
+            type: "Post",
+            data: { SearchModel: model },
+            success: function (result) {
+                _global_function.RemoveLoading()
+                $('#btnExport').prop('disabled', false);
+                if (result.isSuccess) {
+                    _msgalert.success(result.message);
+                    window.location.href = result.path;
+                } else {
+                    _msgalert.error(result.message);
+                }
+                $('#icon-export').removeClass('fa-spinner fa-pulse');
+                $('#icon-export').addClass('fa-file-excel-o');
+            }
+        });
+    },
 }
