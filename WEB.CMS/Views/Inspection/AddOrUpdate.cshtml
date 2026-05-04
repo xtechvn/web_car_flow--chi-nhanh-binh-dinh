@@ -89,29 +89,14 @@
 
 <script>
     $('#VehicleNumber').on('input', function () {
-        let value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        let value = this.value
+                    .toUpperCase()                 // chuyển IN HOA
+                    .replace(/[^0-9A-Z\/]/g, '');  // chỉ giữ chữ, số, /
 
-        // 2 số đầu
-        let province = value.slice(0, 2).replace(/\D/g, '');
+        // Xóa dấu / thừa (//// → /)
+        value = value.replace(/\/+/g, '/');
 
-        // phần còn lại
-        let rest = value.slice(2);
-
-        // 1–2 chữ
-        let letters = rest.match(/^[A-Z]{0,2}/)?.[0] || '';
-        rest = rest.slice(letters.length);
-
-        // 5 số cuối
-        let numbers = rest.match(/^\d{0,20}/)?.[0] || '';
-
-        let result = province + letters;
-
-        if (province.length === 2 && letters.length >= 1) {
-            result += '-' + numbers;
-        }
-
-
-        this.value = result;
+        this.value = value;
     });
     $('#VehicleWeight').on('input', function () {
         var vehicleWeight = this.value
