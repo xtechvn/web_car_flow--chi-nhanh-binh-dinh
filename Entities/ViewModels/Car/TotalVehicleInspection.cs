@@ -12,6 +12,7 @@ namespace Entities.ViewModels.Car
         public double TotalCarCompleted { get; set; }//Tổng số xe đã lấy hàng
         public double TotalCarUnfinished { get; set; }//Tổng số xe chưa lấy hàng
         public double TotalCarArriving16h { get; set; }//Tổng số xe đến lấy hàng sau 16h
+        public double TotalCarMultipleTrough { get; set; }//Tổng số xe ngắt máng
         public double TotalTroughType3 { get; set; }//Tổng số bản ghi theo từng loại máng
         public double TotalTroughType4 { get; set; }
         public double TotalTroughType5 { get; set; }
@@ -19,6 +20,8 @@ namespace Entities.ViewModels.Car
         public double TotalTroughType7 { get; set; }
         public double TotalTroughType8 { get; set; }
         public double TotalWeightTroughType { get; set; }//TÍNH TỔNG TRỌNG LƯỢNG
+        public double TotalWeightAfter16h { get; set; }//TÍNH TỔNG TRỌNG LƯỢNG sau 16h
+        public double TotalWeightNotCompleted { get; set; }//TÍNH TỔNG TRỌNG LƯỢNG chưa xuất hàng
         public double TotalWeightTroughType3 { get; set; }
         public double TotalWeightTroughType4 { get; set; }
         public double TotalWeightTroughType5 { get; set; }

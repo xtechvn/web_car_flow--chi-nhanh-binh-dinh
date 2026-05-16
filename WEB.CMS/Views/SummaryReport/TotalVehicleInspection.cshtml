@@ -10,12 +10,20 @@
 
 
     <div class="stat-box">
-        <p>Tổng số xe đang ký</p>
+        <p>Tổng số xe đăng ký</p>
         <h3>@(TotalData != null ? TotalData.TotalCar : 0)</h3>
+    </div>
+    <div class="stat-box">
+        <p>Số chuyến chưa xuất</p>
+        <h3>@(TotalData != null ? TotalData.TotalCarUnfinished : 0)</h3>
     </div>
     <div class="stat-box">
         <p>Số chuyến đã xuất</p>
         <h3>@(TotalData != null ? TotalData.TotalCarCompleted : 0)</h3>
+    </div>
+    <div class="stat-box">
+        <p>Khối lượng chưa xuất (tấn)</p>
+        <h3> @(TotalData != null ? TotalData.TotalWeightNotCompleted : 0)</h3>
     </div>
     <div class="stat-box">
         <p>Khối lượng đã xuất (tấn)</p>
@@ -24,6 +32,14 @@
     <div class="stat-box">
         <p>số xe đến lấy sau 16h</p>
         <h3>@(TotalData != null ? TotalData.TotalCarArriving16h : 0)</h3>
+    </div>
+    <div class="stat-box">
+        <p>Khối lượng xuất sau 16h(tấn)</p>
+        <h3>@(TotalData != null ? TotalData.TotalWeightAfter16h : 0)</h3>
+    </div>
+    <div class="stat-box">
+        <p>Số Xe ngắt máng</p>
+        <h3>@(TotalData != null ? TotalData.MaxVehicleTimeOutToday:0)</h3>
     </div>
     <div class="stat-box">
         <p>Thời điểm kết thúc xuất hàng</p>
