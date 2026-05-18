@@ -187,9 +187,73 @@
                     }
 
                 }
+                else
+                {
+                
+                    <tr class="CartoFactory_@item.Id" data-queue="@item.RecordNumber" style="@(item.VehicleTroughStatus == 4 ?"background:antiquewhite;": "" )">
 
+                        <td>@item.RecordNumber</td>
+                        <td class="customer-rank">
+                            @switch (item.Rank) {
+                                case 0:
+                                    <img src='~/images/icons/icon-bac.png' class='rank-icon silver' />
+                                    break;
+                                case 1:
+                                    <img src='~/images/icons/icon-vang.png' class='rank-icon gold' />
+                                    break;
+                                case 2:
+                                    <img src='~/images/icons/icon-kim-cuong.png' class='rank-icon diamond' />
+                                    break;
+                            }
+                            <span class="rank-text">@item.CustomerName</span>
+                        </td>
+                        <td>@item.DriverName</td>
+                        <td>
+                            <a class="btn-detail"
+                            data-id="@item.Id" style="cursor:pointer">@item.VehicleNumber</a>
+                        </td>
+                        <td>
+                            @(item.VehicleWeighingTimeComeOut!=null?((DateTime)item.VehicleWeighingTimeComeOut).ToString("HH:mm dd/MM/yyyy"):"")
+                        </td>
+                        <td>@(item.VehicleLoadTaken >0?((decimal)item.VehicleLoadTaken).ToString("N0"):"")</td>
+                        <td>
+                            <div class="status-dropdown">
+                                <p style="font-size:13px!important">Chưa có</p>
+                            </div>
+                        </td>
+                        <td>
+                            @if (ViewBag.type == 0)
+                            {
+                                <textarea class="Note" name="Note" value="@item.Note">@item.Note</textarea>
+                            }
+                            else
+                            {
+                                <div style="display: flex; align-items: center">
+                                    <div style="white-space: pre-line;">
+                                        @item.Note
+                                    </div>
+                                        </div>
+                                    }
+
+                                </td>
+                                <td>
+                                    <div class="status-dropdown">
+                                        <button class="dropdown-toggle" data-options='[
+                                @foreach (var allcode in AllCode)
+                                {
+
+                                    @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
+
+                                }
+                                                            ]'>
+                                            @item.VehicleTroughStatusName
+                                        </button>
+                                    </div>
+                            </td>
+                    </tr>
+                }
             }
-
+                
         </tbody>
     </table>
 }

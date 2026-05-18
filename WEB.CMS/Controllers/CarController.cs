@@ -73,6 +73,8 @@ namespace WEB.CMS.Controllers
                 {
                     data = data.OrderBy(s => s.VehicleArrivalDate).ToList();
                 }
+                ViewBag.count= data != null ? data.Count : 0;
+                ViewBag.sum= data != null ? data.Sum(x=>Convert.ToInt32(x.VehicleLoad)).ToString("N0") : "0";
                 return PartialView(data);
             }
             catch (Exception ex)
