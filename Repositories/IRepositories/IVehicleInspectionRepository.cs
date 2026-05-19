@@ -35,5 +35,6 @@ namespace Repositories.IRepositories
         Task<int> UpdateVehicleLoadTaken(int Id, int VehicleLoadTaken);
         Task<string> ExportDeposit(CartoFactorySearchModel searchModel, string FilePath);
         Task<string> ExportSummaryReport(List<CartoFactoryModel> data, string FilePath);
+        Task<string> ExportTimeProductDelivery(List<CartoFactoryModel> data, string FilePath);
     }
 }

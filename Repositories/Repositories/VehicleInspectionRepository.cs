@@ -863,5 +863,215 @@ namespace Repositories.Repositories
 
             return result;
         }
+        public async Task<string> ExportTimeProductDelivery(List<CartoFactoryModel> data, string FilePath)
+        {
+            var pathResult = string.Empty;
+            try
+            {
+                if (data != null && data.Count > 0)
+                {
+                    Workbook wb = new Workbook();
+                    Worksheet ws = wb.Worksheets[0];
+                    ws.Name = "Danh sách xe";
+                    Cells cell = ws.Cells;
+
+                    var range = ws.Cells.CreateRange(0, 0, 1, 1);
+                    StyleFlag st = new StyleFlag();
+                    st.All = true;
+                    Style style = ws.Cells["A1"].GetStyle();
+
+                    #region Header
+                    range = cell.CreateRange(0, 0, 1, 19);
+                    style = ws.Cells["A1"].GetStyle();
+                    style.Font.IsBold = true;
+                    style.IsTextWrapped = true;
+                    style.ForegroundColor = Color.FromArgb(33, 88, 103);
+                    style.BackgroundColor = Color.FromArgb(33, 88, 103);
+                    style.Pattern = BackgroundType.Solid;
+                    style.Font.Color = Color.White;
+                    style.VerticalAlignment = TextAlignmentType.Center;
+                    style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.TopBorder].Color = Color.Black;
+                    style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.BottomBorder].Color = Color.Black;
+                    style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.LeftBorder].Color = Color.Black;
+                    style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.RightBorder].Color = Color.Black;
+                    range.ApplyStyle(style, st);
+
+                    // Set column width
+                    cell.SetColumnWidth(0, 8);
+                    cell.SetColumnWidth(1, 20);
+                    cell.SetColumnWidth(2, 40);
+                    cell.SetColumnWidth(3, 20);
+                    cell.SetColumnWidth(4, 20);
+                    cell.SetColumnWidth(5, 30);
+                    cell.SetColumnWidth(6, 30);
+                    cell.SetColumnWidth(7, 25);
+                    cell.SetColumnWidth(8, 25);
+                    cell.SetColumnWidth(9, 25);
+                    cell.SetColumnWidth(10, 25);
+                    cell.SetColumnWidth(11, 25);
+                    cell.SetColumnWidth(12, 25);
+                    cell.SetColumnWidth(13, 25);
+                    cell.SetColumnWidth(14, 25);
+                    cell.SetColumnWidth(15, 25);
+                    cell.SetColumnWidth(16, 25);
+                    cell.SetColumnWidth(17, 25);
+                    cell.SetColumnWidth(18, 25);
+                    cell.SetColumnWidth(19, 25);
+                    cell.SetColumnWidth(20, 25);
+                    cell.SetColumnWidth(21, 25);
+
+
+
+
+                    // Set header value
+                    ws.Cells["A1"].PutValue("STT");
+                    ws.Cells["B1"].PutValue("Giờ đăng ký online");
+                    ws.Cells["C1"].PutValue("Giờ đăng tài");
+                    ws.Cells["D1"].PutValue("Biển số xe");
+                    ws.Cells["E1"].PutValue("Tên Khách hàng");
+                    ws.Cells["F1"].PutValue("Mã Khách hàng");
+                    ws.Cells["G1"].PutValue("Tl hàng cho phép");
+                    ws.Cells["H1"].PutValue("Máng xuất");
+                    ws.Cells["I1"].PutValue("Xe nâng");
+                    ws.Cells["J1"].PutValue("Thời gian xe vào máng");
+                    ws.Cells["K1"].PutValue("Thời gian xe ra khỏi máng");
+                    ws.Cells["L1"].PutValue("Cân vào");
+                    ws.Cells["M1"].PutValue("Cân ra");
+                    ws.Cells["N1"].PutValue("NET WEIGHT");
+                    ws.Cells["O1"].PutValue(" T.Lượng đơn hàng");
+                    ws.Cells["P1"].PutValue("số bao");
+                    ws.Cells["Q1"].PutValue("Trừ bì");
+                    ws.Cells["R1"].PutValue("Lệch");
+                    ws.Cells["S1"].PutValue("LIMIT");
+                    ws.Cells["T1"].PutValue("Duyệt");
+                    ws.Cells["U1"].PutValue("Giờ cân vào");
+                    ws.Cells["V1"].PutValue("Giờ cân ra");
+
+
+                    #endregion
+
+                    #region Body
+
+                    range = cell.CreateRange(1, 0, data.Count * 2, 21);
+                    style = ws.Cells["A2"].GetStyle();
+                    style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.TopBorder].Color = Color.Black;
+                    style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.BottomBorder].Color = Color.Black;
+                    style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.LeftBorder].Color = Color.Black;
+                    style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.RightBorder].Color = Color.Black;
+                    style.VerticalAlignment = TextAlignmentType.Center;
+                    range.ApplyStyle(style, st);
+
+                    Style alignCenterStyle = ws.Cells["A2"].GetStyle();
+                    alignCenterStyle.HorizontalAlignment = TextAlignmentType.Center;
+
+                    Style numberStyle = ws.Cells["A2"].GetStyle();
+                    numberStyle.Number = 3;
+                    numberStyle.HorizontalAlignment = TextAlignmentType.Right;
+                    numberStyle.VerticalAlignment = TextAlignmentType.Center;
+
+                    int RowIndex = 1;
+
+                    foreach (var item in data)
+                    {
+                        var customers = SplitCustomer(item.CustomerName);
+
+                        int startRow = RowIndex + 1; // dòng bắt đầu
+                        int totalRow = customers.Count;
+
+                        bool isFirstRow = true;
+                        var TrangThai_name = "";
+  
+
+
+                        string ttchitiet = string.Empty;
+
+                        foreach (var cus in customers)
+                        {
+                            RowIndex++;
+
+                            if (isFirstRow)
+                            {
+                                ws.Cells["A" + RowIndex].PutValue(item.RecordNumber);
+                                ws.Cells["B" + RowIndex].PutValue(item.RegisterDateOnline!=null?((DateTime)item.RegisterDateOnline).ToString("HH:mm dd/MM/yyyy"):"");
+                                ws.Cells["C" + RowIndex].PutValue(item.VehicleArrivalDate!=null?((DateTime)item.VehicleArrivalDate).ToString("HH:mm dd/MM/yyyy"):"");
+                                ws.Cells["D" + RowIndex].PutValue(item.VehicleNumber);
+
+                                ws.Cells["G" + RowIndex].PutValue(item.VehicleWeightMax);
+                                ws.Cells["G" + RowIndex].SetStyle(numberStyle);
+                                ws.Cells["H" + RowIndex].PutValue(item.TroughTypes);
+                                ws.Cells["I" + RowIndex].PutValue("");
+                                ws.Cells["J" + RowIndex].PutValue(item.VehicleWeighingTimeComeIn != null ? item.VehicleWeighingTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "");
+                                ws.Cells["K" + RowIndex].PutValue(item.VehicleWeighingTimeComeOut != null ? item.VehicleWeighingTimeComeOut.Value.ToString("HH:mm dd/MM/yyyy") : "");
+                               
+                                ws.Cells["L" + RowIndex].PutValue(item.VehicleLoadTaken != null ? item.VehicleLoadTaken : 0);
+                                ws.Cells["L" + RowIndex].SetStyle(numberStyle);
+                                ws.Cells["M" + RowIndex].PutValue(item.TotalVehicleTroughWeight != null ? item.TotalVehicleTroughWeight: 0);
+                                ws.Cells["M" + RowIndex].SetStyle(numberStyle);
+                                ws.Cells["N" + RowIndex].PutValue(item.TotalVehicleTroughWeight ?? 0 - item.VehicleLoadTaken?? 0);
+                                ws.Cells["N" + RowIndex].SetStyle(numberStyle);
+                                ws.Cells["O" + RowIndex].PutValue("");
+                                ws.Cells["P" + RowIndex].PutValue(item.TotalVehicleTroughWeight ?? 0 /25);
+                                ws.Cells["P" + RowIndex].SetStyle(numberStyle);
+                                ws.Cells["Q" + RowIndex].PutValue("");
+                                ws.Cells["R" + RowIndex].PutValue("");
+                                ws.Cells["S" + RowIndex].PutValue("");
+                                ws.Cells["T" + RowIndex].PutValue("");
+                                ws.Cells["U" + RowIndex].PutValue(item.VehicleTroughTimeComeOut != null ? item.VehicleTroughTimeComeOut.Value.ToString("HH:mm dd/MM/yyyy") : "");
+                                ws.Cells["V" + RowIndex].PutValue(item.VehicleWeighingTimeComplete != null ? item.VehicleWeighingTimeComplete.Value.ToString("HH:mm dd/MM/yyyy") : "");
+
+
+                                isFirstRow = false;
+                            }
+
+                            ws.Cells["E" + RowIndex].PutValue(cus.Name);
+                            ws.Cells["F" + RowIndex].PutValue(cus.Code);
+                        }
+                        // 👉 MERGE CELL
+                        if (totalRow > 1)
+                        {
+                            ws.Cells.Merge(startRow - 1, 0, totalRow, 1); // A
+                            ws.Cells.Merge(startRow - 1, 1, totalRow, 1); // B
+                            ws.Cells.Merge(startRow - 1, 2, totalRow, 1); // C
+                            ws.Cells.Merge(startRow - 1, 3, totalRow, 1); // D
+                            ws.Cells.Merge(startRow - 1, 6, totalRow, 1); // G
+                            ws.Cells.Merge(startRow - 1, 7, totalRow, 1); // H
+                            ws.Cells.Merge(startRow - 1, 8, totalRow, 1); // I
+                            ws.Cells.Merge(startRow - 1, 9, totalRow, 1); // J
+                            ws.Cells.Merge(startRow - 1, 10, totalRow, 1); // K
+                            ws.Cells.Merge(startRow - 1, 11, totalRow, 1); // L
+                            ws.Cells.Merge(startRow - 1, 12, totalRow, 1); // M
+                            ws.Cells.Merge(startRow - 1, 13, totalRow, 1); // N
+                            ws.Cells.Merge(startRow - 1, 14, totalRow, 1); // O
+                            ws.Cells.Merge(startRow - 1, 15, totalRow, 1); // P
+                            ws.Cells.Merge(startRow - 1, 16, totalRow, 1); // Q
+                            ws.Cells.Merge(startRow - 1, 17, totalRow, 1); // R
+                            ws.Cells.Merge(startRow - 1, 18, totalRow, 1); // S
+                            ws.Cells.Merge(startRow - 1, 19, totalRow, 1); // T
+                            ws.Cells.Merge(startRow - 1, 20, totalRow, 1); // U
+                            ws.Cells.Merge(startRow - 1, 21, totalRow, 1); // V
+                        }
+                        RowIndex++;
+
+                    }
+
+                    #endregion
+                    wb.Save(FilePath);
+                    pathResult = FilePath;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("ExportDeposit - OrderRepository: " + ex);
+            }
+            return pathResult;
+        }
     }
 }
