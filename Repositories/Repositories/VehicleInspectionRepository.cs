@@ -2,6 +2,7 @@
 using DAL;
 using Entities.ConfigModels;
 using Entities.Models;
+using Entities.ViewModels;
 using Entities.ViewModels.Car;
 using Microsoft.Extensions.Options;
 using Nest;
@@ -863,7 +864,7 @@ namespace Repositories.Repositories
 
             return result;
         }
-        public async Task<string> ExportTimeProductDelivery(List<CartoFactoryModel> data, string FilePath)
+        public async Task<string> ExportTimeProductDelivery(List<VehicleInspectionTimeProductDeliveryModel> data, string FilePath)
         {
             var pathResult = string.Empty;
             try
@@ -1015,15 +1016,19 @@ namespace Repositories.Repositories
                                 ws.Cells["L" + RowIndex].SetStyle(numberStyle);
                                 ws.Cells["M" + RowIndex].PutValue(item.TotalVehicleTroughWeight != null ? item.TotalVehicleTroughWeight: 0);
                                 ws.Cells["M" + RowIndex].SetStyle(numberStyle);
-                                ws.Cells["N" + RowIndex].PutValue(item.TotalVehicleTroughWeight ?? 0 - item.VehicleLoadTaken?? 0);
+                                ws.Cells["N" + RowIndex].PutValue((item.NetWeight != null ? item.NetWeight.Value : 0).ToString("N0"));
                                 ws.Cells["N" + RowIndex].SetStyle(numberStyle);
-                                ws.Cells["O" + RowIndex].PutValue("");
-                                ws.Cells["P" + RowIndex].PutValue(item.TotalVehicleTroughWeight ?? 0 /25);
+                                ws.Cells["O" + RowIndex].PutValue((item.OrderWeight != null ? item.OrderWeight.Value : 0).ToString("N2"));
+                                ws.Cells["O" + RowIndex].SetStyle(numberStyle);
+                                ws.Cells["P" + RowIndex].PutValue((item.TotalBag != null ? item.TotalBag.Value : 0).ToString("N2"));
                                 ws.Cells["P" + RowIndex].SetStyle(numberStyle);
-                                ws.Cells["Q" + RowIndex].PutValue("");
-                                ws.Cells["R" + RowIndex].PutValue("");
-                                ws.Cells["S" + RowIndex].PutValue("");
-                                ws.Cells["T" + RowIndex].PutValue("");
+                                ws.Cells["Q" + RowIndex].PutValue((item.DeductionWeight != null ? item.DeductionWeight.Value : 0).ToString("N2"));
+                                ws.Cells["Q" + RowIndex].SetStyle(numberStyle);
+                                ws.Cells["R" + RowIndex].PutValue((item.DifferenceWeight != null ? item.DifferenceWeight.Value : 0).ToString("N0"));
+                                ws.Cells["R" + RowIndex].SetStyle(numberStyle);
+                                ws.Cells["S" + RowIndex].PutValue(item.LimitValue);
+                                ws.Cells["S" + RowIndex].SetStyle(numberStyle);
+                                ws.Cells["T" + RowIndex].PutValue(item.ApproveStatus);
                                 ws.Cells["U" + RowIndex].PutValue(item.VehicleTroughTimeComeOut != null ? item.VehicleTroughTimeComeOut.Value.ToString("HH:mm dd/MM/yyyy") : "");
                                 ws.Cells["V" + RowIndex].PutValue(item.VehicleWeighingTimeComplete != null ? item.VehicleWeighingTimeComplete.Value.ToString("HH:mm dd/MM/yyyy") : "");
 
@@ -1072,6 +1077,37 @@ namespace Repositories.Repositories
                 LogHelper.InsertLogTelegram("ExportDeposit - OrderRepository: " + ex);
             }
             return pathResult;
+        }
+        public async Task<List<VehicleInspectionTimeProductDeliveryModel>> GetListVehicleInspectionTimeProductDelivery(DateTime? FromDate, DateTime? ToDate, int LoadType)
+        {
+            try
+            {
+                var TIME_RESET = await _AllCodeDAL.GetListSortByName(AllCodeType.TIME_RESET);
+                var hours = TIME_RESET != null && TIME_RESET.Count > 0 && TIME_RESET[0].UpdateTime.HasValue
+                            ? TIME_RESET[0].UpdateTime.Value.Hour
+                            : 17;
+                var minutes = TIME_RESET != null && TIME_RESET.Count > 0 && TIME_RESET[0].UpdateTime.HasValue
+                              ? TIME_RESET[0].UpdateTime.Value.Minute
+                              : 55;
+                var now = DateTime.Now;
+                var expireAt = new DateTime(now.Year, now.Month, now.Day, hours, minutes, 0);
+                if (ToDate != null)
+                {
+                    ToDate = ((DateTime)ToDate).Date.AddHours(hours).AddMinutes(minutes).AddSeconds(0);
+                }
+                else
+                {
+                    ToDate = expireAt;
+                }
+
+
+                return await _VehicleInspectionDAL.GetListVehicleInspectionTimeProductDelivery(FromDate, ToDate, LoadType);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetListVehicleInspectionSynthetic - VehicleInspectionRepository: " + ex);
+            }
+            return null;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Entities.ViewModels;
 using Entities.ViewModels.Car;
 using System;
 using System.Collections.Generic;
@@ -36,5 +37,6 @@ namespace Repositories.IRepositories
         Task<string> ExportDeposit(CartoFactorySearchModel searchModel, string FilePath);
         Task<string> ExportSummaryReport(List<CartoFactoryModel> data, string FilePath);
         Task<string> ExportTimeProductDelivery(List<CartoFactoryModel> data, string FilePath);
+        Task<List<VehicleInspectionTimeProductDeliveryModel>> GetListVehicleInspectionTimeProductDelivery(DateTime? FromDate, DateTime? ToDate, int LoadType);
     }
 }

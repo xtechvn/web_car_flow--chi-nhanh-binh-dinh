@@ -44,5 +44,7 @@ namespace Entities.Models
         public string ProtectNotes { get; set; }
         public int? Rank { get; set; }
         public string CSNotes { get; set; }
+        public decimal? VehicleWeightIn { get; set; }
+        public decimal? VehicleWeightOut { get; set; }
     }
 }

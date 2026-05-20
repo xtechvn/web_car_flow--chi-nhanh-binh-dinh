@@ -127,6 +127,8 @@ namespace DAL
                     new SqlParameter("@AudioPath", (object?)model.AudioPath ?? DBNull.Value),
                     new SqlParameter("@Rank", (object?)model.Rank ?? DBNull.Value),
                     new SqlParameter("@CSNotes", (object?)model.CSNotes ?? DBNull.Value),
+                    new SqlParameter("@VehicleWeightIn", (object?)model.VehicleWeightIn ?? DBNull.Value),
+                    new SqlParameter("@VehicleWeightOut", (object?)model.VehicleWeightOut ?? DBNull.Value),
 
                 };
 
@@ -628,6 +630,27 @@ namespace DAL
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     return dt.ToList<CartoFactoryModel>();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetListCartoFactory - VehicleInspectionDAL: " + ex);
+            }
+            return null;
+        }
+        public async Task<List<VehicleInspectionTimeProductDeliveryModel>> GetListVehicleInspectionTimeProductDelivery(DateTime? FromDate, DateTime? ToDate, int LoadType)
+        {
+            try
+            {
+                SqlParameter[] objParam = new SqlParameter[3];
+                objParam[0] = new SqlParameter("@FromDate", FromDate == null ? DateTime.Now : FromDate);
+                objParam[1] = new SqlParameter("@ToDate", ToDate == null ? DateTime.Now : ToDate);
+                objParam[2] = new SqlParameter("@LoadType", LoadType);
+
+                var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetListVehicleInspectionTimeProductDelivery, objParam);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return dt.ToList<VehicleInspectionTimeProductDeliveryModel>();
                 }
             }
             catch (Exception ex)

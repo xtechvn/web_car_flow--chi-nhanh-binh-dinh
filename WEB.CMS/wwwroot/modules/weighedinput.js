@@ -209,7 +209,7 @@ $(document).ready(function () {
     }));
     const jsonString = JSON.stringify(options);
     // Hàm render row
-    function renderRow(item) {
+    function renderRow(item, isProcessed = false) {
         var date = new Date(item.registerDateOnline);
         let formatted =
             String(date.getHours()).padStart(2, '0') + ":" +
@@ -224,6 +224,16 @@ $(document).ready(function () {
             String(date2.getDate()).padStart(2, '0') + "/" +
             String(date2.getMonth() + 1).padStart(2, '0') + "/" +
             date2.getFullYear();
+
+        var weightVal = item.vehicleWeightIn > 0 ? item.vehicleWeightIn.toLocaleString('en-US') : "";
+        var weightDisplay = isProcessed ? 
+            weightVal : 
+            `<input type="text" class="input-form VehicleWeightIn currency" maxlength="8" 
+                   value="${weightVal}"
+                   data-original="${weightVal}"
+                   data-id="${item.id}"
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);" />`;
+
         return `
         <tr class="CartoFactory_${item.id}" data-queue="${formatted2}" data-LoadType="${item.loadType}" >
             <td>${item.recordNumber}</td>
@@ -233,6 +243,7 @@ $(document).ready(function () {
             <td>${item.driverName}</td>
             <td>${item.phoneNumber}</td>
             <td>${item.loadTypeName}</td>
+            <td>${weightDisplay}</td>
             <td>
                 <div class="status-dropdown">
                     <button class="dropdown-toggle " data-options='${jsonString}'>
@@ -304,7 +315,7 @@ $(document).ready(function () {
     connection.on("ListWeighedInput_Da_SL", function (item) {
         $('.CartoFactory_' + item.id).remove();
         const tbody = document.getElementById("dataBody-1");
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
         sortTable_Da_SL2(); // sắp xếp lại ngay khi thêm
     });
@@ -312,7 +323,7 @@ $(document).ready(function () {
     connection.on("ListWeighedInput", function (item) {
         $('.CartoFactory_' + item.id).remove();
         const tbody = document.getElementById("dataBody-0");
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        tbody.insertAdjacentHTML("beforeend", renderRow(item, false));
         sortTable(); // sắp xếp lại ngay khi thêm
         sortTable2(); // sắp xếp lại ngay khi thêm
     });
@@ -320,7 +331,7 @@ $(document).ready(function () {
     connection.off("ListCallTheScale_Da_SL");
     connection.on("ListCallTheScale_Da_SL", function (item) {
         const tbody = document.getElementById("dataBody-0");
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        tbody.insertAdjacentHTML("beforeend", renderRow(item, false));
         sortTable();
     });
     connection.off("ListCallTheScale_0");
@@ -341,7 +352,7 @@ $(document).ready(function () {
     connection.off("ListCarCall");
     connection.on("ListCarCall", function (item) {
         const tbody = document.getElementById("dataBody-1");
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
         sortTable_Da_SL2(); // sắp xếp lại ngay khi thêm
 
@@ -365,6 +376,20 @@ $(document).ready(function () {
 
         return new Date(year, month - 1, day, hour, minute).getTime();
     }
+
+    $(document).on('blur', 'input.VehicleWeightIn', function (e) {
+        var element = $(this);
+        var originalValue = element.attr('data-original') || "";
+        var currentValue = element.val();
+
+        if (currentValue === originalValue) {
+            return;
+        }
+
+        var id = element.attr('data-id');
+        var weight_In = currentValue != undefined && currentValue !== "" ? currentValue.replace(/,/g, '') : 0;
+        _Weighed_Input.UpdateVehicleWeightIn(id, weight_In, element);
+    });
 });
 var _Weighed_Input = {
     init: function () {
@@ -435,6 +460,30 @@ var _Weighed_Input = {
                 status_type = result.status;
                 if (result.status == 0) {
                     _msgalert.success(result.msg)
+                    $.magnificPopup.close();
+                } else {
+                    _msgalert.error(result.msg)
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log("Status: " + textStatus);
+            }
+        });
+        return status_type;
+    },
+    UpdateVehicleWeightIn: function (id, vehicleWeightIn, element) {
+        var status_type = 0
+        $.ajax({
+            url: "/Car/UpdateVehicleWeightInAndOut",
+            type: "post",
+            data: { id: id, VehicleWeightIn: vehicleWeightIn, VehicleWeightOut: 0 },
+            success: function (result) {
+                status_type = result.status;
+                if (result.status == 0) {
+                    _msgalert.success(result.msg)
+                    if (element) {
+                        element.attr('data-original', element.val());
+                    }
                     $.magnificPopup.close();
                 } else {
                     _msgalert.error(result.msg)

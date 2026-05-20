@@ -31,6 +31,8 @@
                 <th>Ghi chú</th>
                 <th>Máng xuất</th>
                 <th>Trọng lượng (kg)</th>
+                <th>Tải trọng cân ra (kg)</th>
+                <th>NET WEIGHT (kg)</th>
                 <th>Tình Trạng</th>
             </tr>
         </thead>
@@ -85,6 +87,21 @@
                                        placeholder="Vui lòng nhập" @(ViewBag.type == 1 ? "disabled" : "") />
 
                             </td>
+                              <td>
+                                <input class="VehicleWeightIn" id="VehicleWeightIn_@item.Id" value="@item.VehicleWeightIn" style="display:none;" />
+                                 <input type="text" style="width:100%!important"
+                                        class="input-form currency VehicleWeightOut weight CartoFactory_@item.Id _weight @(ViewBag.type == 1 ? "disabled" : "")"
+                                        maxlength="8"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,8);"
+                                       value="@(item.VehicleWeightOut != null ? ((decimal)item.VehicleWeightOut).ToString("N0") : "")"
+                                       data-original="@(item.VehicleWeightOut != null ? ((decimal)item.VehicleWeightOut).ToString("N0") : "")"
+                                        data-id="@item.Id"
+                                        placeholder="Vui lòng nhập" @(ViewBag.type == 1 ? "disabled" : "") />
+
+                             </td>
+                            <td id="NetWeight_@item.Id">
+                                @((item.VehicleWeightOut - item.VehicleWeightIn).Value.ToString("N0"))
+                            </td>
                             <td>
                                 <div class="status-dropdown">
                                     <button class="dropdown-toggle " data-options='[
@@ -115,6 +132,8 @@
                         <td>
                             @(item.VehicleWeighingTimeComplete!=null?((DateTime)item.VehicleWeighingTimeComplete).ToString("HH:mm dd/MM/yyyy"):"")
                         </td>
+                        <td></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -152,6 +171,8 @@ else
                 <th>Ghi chú</th>
                 <th>Máng xuất</th>
                 <th>Trọng lượng (kg)</th>
+                <th>Tải trọng cân ra (kg)</th>
+                <th>NET WEIGHT (kg)</th>
                 <th>Tình Trạng</th>
             </tr>
         </thead>
@@ -162,5 +183,5 @@ else
 
 <script>
     // Gộp cột nếu có nhiều dòng chung 1 xe
-    _listVehicles.autoRowspanWithCondition("ListCarCall-" + @ViewBag.type, [0, 1, 2, 3, 4,5, 8], [0, 1, 2, 3, 4,5]);
+    _listVehicles.autoRowspanWithCondition("ListCarCall-" + @ViewBag.type, [0, 1, 2, 3, 4,5, 8,9,10], [0, 1, 2, 3, 4,5]);
 </script>

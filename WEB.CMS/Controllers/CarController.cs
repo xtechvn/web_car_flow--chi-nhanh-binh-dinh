@@ -73,8 +73,8 @@ namespace WEB.CMS.Controllers
                 {
                     data = data.OrderBy(s => s.VehicleArrivalDate).ToList();
                 }
-                ViewBag.count= data != null ? data.Count : 0;
-                ViewBag.sum= data != null ? data.Sum(x=>Convert.ToInt32(x.VehicleLoad)).ToString("N0") : "0";
+                ViewBag.count = data != null ? data.Count : 0;
+                ViewBag.sum = data != null ? data.Sum(x => Convert.ToInt32(x.VehicleLoad)).ToString("N0") : "0";
                 return PartialView(data);
             }
             catch (Exception ex)
@@ -296,6 +296,8 @@ namespace WEB.CMS.Controllers
                 model.Rank = detail.Rank;
                 model.RankName = detail.RankName;
                 model.CSNotes = detail.CSNotes;
+                model.VehicleWeightIn = detail.VehicleWeightIn;
+                model.VehicleWeightOut = detail.VehicleWeightOut;
                 switch (type)
                 {
                     case 1:
@@ -582,7 +584,8 @@ namespace WEB.CMS.Controllers
                                 }
                                 else
                                 {
-                                    detail.ListTroughWeight.Add(new TroughWeight());
+                                    if(detail.ListTroughWeight!=null)
+                                     detail.ListTroughWeight.Add(new TroughWeight());
                                     await _hubContext.Clients.All.SendAsync("ListCarCall", detail);
                                 }
                             }
@@ -1059,6 +1062,12 @@ namespace WEB.CMS.Controllers
                 model.VehicleStatus = status;
                 model.VehicleArrivalDate = DateTime.Now;
                 model.ProtectNotes = note;
+                model.TrangThai = detail.TrangThai;
+                model.Rank = detail.Rank;
+                model.RankName = detail.RankName;
+                model.CSNotes = detail.CSNotes;
+                model.VehicleWeightIn = detail.VehicleWeightIn;
+                model.VehicleWeightOut = detail.VehicleWeightOut;
                 var update = await _vehicleInspectionRepository.UpdateCar(model);
                 if (status == (int)VehicleStatus.Da_Den_NM)
                 {
@@ -1162,6 +1171,42 @@ namespace WEB.CMS.Controllers
                     message = ex.Message.ToString()
                 });
             }
+        }
+        public async Task<IActionResult> UpdateVehicleWeightInAndOut(int id, int VehicleWeightIn, int VehicleWeightOut)
+        {
+            try
+            {
+                var _UserId = 0;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+                var model = new VehicleInspectionUpdateModel();
+                model.Id = id;
+                model.VehicleWeightIn = VehicleWeightIn > 0 ? VehicleWeightIn : null;
+                model.VehicleWeightOut = VehicleWeightOut > 0 ? VehicleWeightOut : null;
+                model.UpdatedBy = _UserId;
+
+                var update = await _vehicleInspectionRepository.UpdateCar(model);
+                if (update > 0)
+                {
+                    return Ok(new
+                    {
+                        status = (int)ResponseType.SUCCESS,
+                        msg = "cập nhật thành công"
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("WeighedInput - CarController: " + ex);
+            }
+            return Ok(new
+            {
+                status = (int)ResponseType.ERROR,
+                msg = "cập nhật không thành công"
+            });
         }
     }
 }

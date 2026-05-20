@@ -1,12 +1,12 @@
-﻿@using Entities.ViewModels.Car;
+﻿@using Entities.ViewModels
+@using Entities.ViewModels.Car;
 @using Entities.Models;
 @using Utilities.Contants;
 @{
 
     var title = "Báo cáo thống kê ngày";
-    var TotalData = (TotalVehicleInspection)ViewBag.TotalData;
 }
-@model List<CartoFactoryModel>
+@model List<VehicleInspectionTimeProductDeliveryModel>
 
 <table class="data-table">
     <thead>
@@ -52,19 +52,19 @@
                     </td>
                     <td>@item.VehicleWeightMax</td>
                     <td>@item.TroughTypes</td>
-                 
-                    <td></td>
+
+                    <td>@item.Forklift</td>
                     <td>@(item.VehicleWeighingTimeComeIn != null ? item.VehicleWeighingTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "")</td> @*bước 1*@
                     <td>@(item.VehicleWeighingTimeComeOut != null ? item.VehicleWeighingTimeComeOut.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>@*Bước 3*@
                     <td>@(item.VehicleLoadTaken != null ? item.VehicleLoadTaken.Value.ToString("N0") : "0")</td>
                     <td>@(item.TotalVehicleTroughWeight!= null ? item.TotalVehicleTroughWeight.Value.ToString("N0") : "0")</td>
-                    <td>@((item.TotalVehicleTroughWeight != null? item.TotalVehicleTroughWeight.Value : 0 - item.VehicleLoadTaken != null? item.VehicleLoadTaken.Value : 0).ToString("N0"))</td>
-                    <td></td>
-                    <td>@((item.TotalVehicleTroughWeight != null? item.TotalVehicleTroughWeight.Value/25 : 0 ).ToString("N0"))</td>
-                    <td></td>
-                    <td></td>                 
-                    <td></td> 
-                    <td></td> 
+                    <td>@((item.NetWeight != null ? item.NetWeight.Value : 0).ToString("N0"))</td>
+                    <td> @((item.OrderWeight != null ? item.OrderWeight.Value : 0).ToString("N2"))</td>
+                    <td>@((item.TotalBag != null ? item.TotalBag.Value : 0).ToString("N2"))</td>
+                    <td>@((item.DeductionWeight != null ? item.DeductionWeight.Value : 0).ToString("N2"))</td>
+                    <td>@((item.DifferenceWeight != null ? item.DifferenceWeight.Value : 0).ToString("N0"))</td>
+                    <td>@item.LimitValue</td>
+                    <td>@item.ApproveStatus</td>
                     <td>@(item.VehicleTroughTimeComeOut != null ? item.VehicleTroughTimeComeOut.Value.ToString("HH:mm dd/MM/yyyy") : "")</td> @*bước 1*@
                     <td>@(item.VehicleWeighingTimeComplete != null ? item.VehicleWeighingTimeComplete.Value.ToString("HH:mm dd/MM/yyyy") : "")</td> @*bước 1*@
                 </tr>

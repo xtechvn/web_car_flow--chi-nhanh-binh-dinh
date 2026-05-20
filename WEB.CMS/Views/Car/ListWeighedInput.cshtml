@@ -1,4 +1,4 @@
-﻿@using Entities.ViewModels.Car;
+@using Entities.ViewModels.Car;
 @using Entities.Models;
 @{
     Layout = null;
@@ -17,6 +17,7 @@
                 <th>Tên lái xe</th>
                 <th>Số điện thoại</th>
                 <th>Nhóm tài</th>
+                <th>Tải trọng xe vào (kg)</th>
                 <th>Tình trạng </th>
             </tr>
         </thead>
@@ -34,6 +35,20 @@
                     <td>@item.PhoneNumber</td>
 
                     <td>@item.LoadTypeName</td>
+                    <td>
+                        @if (ViewBag.type == 1)
+                        {
+                            @item.VehicleWeightIn
+                        }
+                        else
+                        {
+                            <input type="text" class="input-form VehicleWeightIn currency" maxlength="8" 
+                                   value="@(item.VehicleWeightIn >0?((decimal)item.VehicleWeightIn).ToString("N0"):"")"
+                                   data-original="@(item.VehicleWeightIn >0?((decimal)item.VehicleWeightIn).ToString("N0"):"")"
+                                   data-id="@item.Id"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);" />
+                        }
+                    </td>
                     <td>
                         <div class="status-dropdown">
                             <button class="dropdown-toggle " data-options='[
@@ -65,6 +80,7 @@ else
                 <th>Tên khách hàng (Trại, đại lý)</th>
                 <th>Tên lái xe</th>
                 <th>Số điện thoại</th>
+                <th>Nhóm tài</th>
                 <th>Tải trọng xe (kg)</th>
                 <th>Tình trạng xe</th>
             </tr>

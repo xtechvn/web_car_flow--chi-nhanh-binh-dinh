@@ -313,10 +313,7 @@ namespace WEB.CMS.Controllers
                 var FromDate = SearchModel.FromDate != null && SearchModel.FromDate != "" ? DateUtil.StringToDate(SearchModel.FromDate) : null;
                 var ToDate = SearchModel.ToDate != null && SearchModel.ToDate != "" ? DateUtil.StringToDate(SearchModel.ToDate) : null;
 
-                var data = await _vehicleInspectionRepository.GetListVehicleInspectionSynthetic(FromDate, ToDate, SearchModel.LoadType);
-                var Total = await _vehicleInspectionRepository.CountTotalVehicleInspectionSynthetic(FromDate, ToDate);
-                ViewBag.TotalData = Total;
-
+                var data = await _vehicleInspectionRepository.GetListVehicleInspectionTimeProductDelivery(FromDate, ToDate, SearchModel.LoadType);
                 return PartialView(data);
             }
             catch (Exception ex)

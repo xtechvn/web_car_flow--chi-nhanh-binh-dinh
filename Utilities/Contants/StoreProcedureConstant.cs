@@ -43,6 +43,7 @@ namespace Utilities.Contants
         public static string SP_GetTotalWeightByTroughType = "SP_GetTotalWeightByTroughType";
         public static string SP_GetTotalWeightByWeightGroup = "SP_GetTotalWeightByWeightGroup";
         public static string SP_GetListRegisteredVehicle = "SP_GetListRegisteredVehicle";
+        public static string SP_GetListVehicleInspectionTimeProductDelivery = "SP_GetListVehicleInspectionTimeProductDelivery";
 
         public static string SP_GetListVehicleProcessingIsLoading = "SP_GetListVehicleProcessingIsLoading";
         public static string SP_GetListVehicleWeighedInput = "SP_GetListVehicleWeighedInput";
