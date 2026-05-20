@@ -253,7 +253,7 @@ $(document).ready(function () {
 
                 var weightOutDisplay = isProcessed ? 
                     weightOutVal : 
-                    `<input class="VehicleWeightIn" id="VehicleWeightIn_${item.id}" value="${tw.vehicleWeightIn || ""}" style="display:none;" />
+                    `<input class="VehicleWeightIn" id="VehicleWeightIn_${item.id}" value="${item.vehicleWeightIn || ""}" style="display:none;" />
                      <input type="text" style="width:100%!important"
                             class="input-form currency VehicleWeightOut weight CartoFactory_${item.id} _weight"
                             maxlength="8"

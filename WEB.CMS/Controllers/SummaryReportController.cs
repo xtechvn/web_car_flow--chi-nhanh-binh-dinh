@@ -330,7 +330,7 @@ namespace WEB.CMS.Controllers
                 var FromDate = SearchModel.FromDate != null && SearchModel.FromDate != "" ? DateUtil.StringToDate(SearchModel.FromDate) : null;
                 var ToDate = SearchModel.ToDate != null && SearchModel.ToDate != "" ? DateUtil.StringToDate(SearchModel.ToDate) : null;
 
-                var data = await _vehicleInspectionRepository.GetListVehicleInspectionSynthetic(FromDate, ToDate, SearchModel.LoadType);
+                var data = await _vehicleInspectionRepository.GetListVehicleInspectionTimeProductDelivery(FromDate, ToDate, SearchModel.LoadType);
 
 
                 int _UserId = 0;
