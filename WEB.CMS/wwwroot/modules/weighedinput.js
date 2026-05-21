@@ -474,9 +474,9 @@ var _Weighed_Input = {
     UpdateVehicleWeightIn: function (id, vehicleWeightIn, element) {
         var status_type = 0
         $.ajax({
-            url: "/Car/UpdateVehicleWeightInAndOut",
+            url: "/Car/UpdateVehicleWeightIn",
             type: "post",
-            data: { id: id, VehicleWeightIn: vehicleWeightIn, VehicleWeightOut: 0 },
+            data: { id: id, VehicleWeightIn: vehicleWeightIn },
             success: function (result) {
                 status_type = result.status;
                 if (result.status == 0) {

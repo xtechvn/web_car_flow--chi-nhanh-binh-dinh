@@ -1172,7 +1172,7 @@ namespace WEB.CMS.Controllers
                 });
             }
         }
-        public async Task<IActionResult> UpdateVehicleWeightInAndOut(int id, int VehicleWeightIn, int VehicleWeightOut)
+        public async Task<IActionResult> UpdateVehicleWeightIn(int id, int VehicleWeightIn)
         {
             try
             {
@@ -1183,8 +1183,42 @@ namespace WEB.CMS.Controllers
                 }
                 var model = new VehicleInspectionUpdateModel();
                 model.Id = id;
-                model.VehicleWeightIn = VehicleWeightIn > 0 ? VehicleWeightIn : null;
-                model.VehicleWeightOut = VehicleWeightOut > 0 ? VehicleWeightOut : null;
+                model.VehicleWeightIn = VehicleWeightIn;
+                model.UpdatedBy = _UserId;
+
+                var update = await _vehicleInspectionRepository.UpdateCar(model);
+                if (update > 0)
+                {
+                    return Ok(new
+                    {
+                        status = (int)ResponseType.SUCCESS,
+                        msg = "cập nhật thành công"
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("WeighedInput - CarController: " + ex);
+            }
+            return Ok(new
+            {
+                status = (int)ResponseType.ERROR,
+                msg = "cập nhật không thành công"
+            });
+        }
+        public async Task<IActionResult> UpdateVehicleWeightOut(int id, int VehicleWeightOut)
+        {
+            try
+            {
+                var _UserId = 0;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+                var model = new VehicleInspectionUpdateModel();
+                model.Id = id;
+                model.VehicleWeightOut = VehicleWeightOut;
                 model.UpdatedBy = _UserId;
 
                 var update = await _vehicleInspectionRepository.UpdateCar(model);

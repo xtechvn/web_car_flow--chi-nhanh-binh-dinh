@@ -648,9 +648,9 @@ var _listVehicles = {
     UpdateVehicleWeightOut: function (id, vehicleWeightOut, element) {
         var status_type = 0
         $.ajax({
-            url: "/Car/UpdateVehicleWeightInAndOut",
+            url: "/Car/UpdateVehicleWeightOut",
             type: "post",
-            data: { id: id, VehicleWeightIn: 0, VehicleWeightOut: vehicleWeightOut },
+            data: { id: id,VehicleWeightOut: vehicleWeightOut },
             success: function (result) {
                 status_type = result.status;
                 if (result.status == 0) {
