@@ -43,7 +43,7 @@
                 {
                     foreach (var TroughWeight in item.ListTroughWeight)
                     {
-                        <tr class="CartoFactory_@item.Id" data-queue="@(item.VehicleTroughTimeComeOut!=null?((DateTime)item.VehicleTroughTimeComeOut).ToString("HH:mm dd/MM/yyyy"):"")">
+                        <tr class="CartoFactory_@item.Id" data-queue="@(item.VehicleTroughTimeComeOut != null ? ((DateTime)item.VehicleTroughTimeComeOut).ToString("HH:mm dd/MM/yyyy") : "")">
                             <td>@item.RecordNumber</td>
                             <td>
                                 @item.VehicleNumber
@@ -52,7 +52,7 @@
                             <td>@item.DriverName</td>
 
                             <td>
-                                @(item.VehicleWeighingTimeComplete!=null?((DateTime)item.VehicleWeighingTimeComplete).ToString("HH:mm dd/MM/yyyy"):"")
+                                @(item.VehicleWeighingTimeComplete != null ? ((DateTime)item.VehicleWeighingTimeComplete).ToString("HH:mm dd/MM/yyyy") : "")
                             </td>
                             <td>
                                 <div style="display: flex; align-items: center">
@@ -63,17 +63,17 @@
                             </td>
                             <td>
                                 <div class="status-dropdown">
-                                    
-                                        @if(TroughWeight.TroughType == null )
-                                        { 
-                                           <p style="font-size:13px!important" > @item.TroughType </p>
-                                        }
-                                        else
-                                        {
-                                        <p style="font-size:13px!important" > @TroughWeight.TroughType  </p>
+
+                                    @if (TroughWeight.TroughType == null)
+                                    {
+                                        <p style="font-size:13px!important"> @item.TroughType </p>
+                                    }
+                                    else
+                                    {
+                                        <p style="font-size:13px!important"> @TroughWeight.TroughType  </p>
 
                                     }
-                                   
+
                                 </div>
                             </td>
                             <td>
@@ -87,31 +87,31 @@
                                        placeholder="Vui lòng nhập" @(ViewBag.type == 1 ? "disabled" : "") />
 
                             </td>
-                              <td>
-                                <input class="VehicleWeightIn" id="VehicleWeightIn_@item.Id" value="@item.VehicleWeightIn" style="display:none;" />
-                                 <input type="text" style="width:100%!important"
-                                        class="input-form currency VehicleWeightOut weight CartoFactory_@item.Id _weight @(ViewBag.type == 1 ? "disabled" : "")"
-                                        maxlength="8"
-                                        oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,8);"
+                            <td>
+                                <input class="VehicleWeightIn" id="VehicleWeightIn_@item.Id" value="@(item.VehicleWeightIn != null ? item.VehicleWeightIn:0)" style="display:none;" />
+                                <input type="text" style="width:100%!important"
+                                       class="input-form currency VehicleWeightOut weight CartoFactory_@item.Id _weight @(ViewBag.type == 1 ? "disabled" : "")"
+                                       maxlength="8"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,8);"
                                        value="@(item.VehicleWeightOut != null ? ((decimal)item.VehicleWeightOut).ToString("N0") : "")"
                                        data-original="@(item.VehicleWeightOut != null ? ((decimal)item.VehicleWeightOut).ToString("N0") : "")"
-                                        data-id="@item.Id"
-                                        placeholder="Vui lòng nhập" @(ViewBag.type == 1 ? "disabled" : "") />
+                                       data-id="@item.Id"
+                                       placeholder="Vui lòng nhập" @(ViewBag.type == 1 ? "disabled" : "") />
 
-                             </td>
+                            </td>
                             <td id="NetWeight_@item.Id">
-                                @((item.VehicleWeightOut - item.VehicleWeightIn).Value.ToString("N0"))
+                                @(((item.VehicleWeightOut != null ? (decimal)item.VehicleWeightOut : 0) - (item.VehicleWeightIn != null ? item.VehicleWeightIn : 0)).Value.ToString("N0"))
                             </td>
                             <td>
                                 <div class="status-dropdown">
                                     <button class="dropdown-toggle " data-options='[
-                                    @foreach (var allcode in AllCode)
-                                    {
+                                                    @foreach (var allcode in AllCode)
+                                                    {
 
-                                        @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
+                                                            @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
 
-                                    }
-                                                                        ]'>
+                                                    }
+                                                                                        ]'>
                                         @item.VehicleWeighingStatusName
                                     </button>
                                 </div>
@@ -121,7 +121,7 @@
                 }
                 else
                 {
-                    <tr class="CartoFactory_@item.Id" data-queue="@(item.VehicleTroughTimeComeOut!=null?((DateTime)item.VehicleTroughTimeComeOut).ToString("HH:mm dd/MM/yyyy"):"")">
+                    <tr class="CartoFactory_@item.Id" data-queue="@(item.VehicleTroughTimeComeOut != null ? ((DateTime)item.VehicleTroughTimeComeOut).ToString("HH:mm dd/MM/yyyy") : "")">
                         <td>@item.RecordNumber</td>
                         <td>
                             @item.VehicleNumber
@@ -130,7 +130,7 @@
                         <td>@item.DriverName</td>
 
                         <td>
-                            @(item.VehicleWeighingTimeComplete!=null?((DateTime)item.VehicleWeighingTimeComplete).ToString("HH:mm dd/MM/yyyy"):"")
+                            @(item.VehicleWeighingTimeComplete != null ? ((DateTime)item.VehicleWeighingTimeComplete).ToString("HH:mm dd/MM/yyyy") : "")
                         </td>
                         <td></td>
                         <td></td>
@@ -140,13 +140,13 @@
                         <td>
                             <div class="status-dropdown">
                                 <button class="dropdown-toggle " data-options='[
-                                @foreach (var allcode in AllCode)
-                                {
+                                            @foreach (var allcode in AllCode)
+                                            {
 
-                                    @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
+                                                    @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
 
-                                }
-                                                                    ]'>
+                                            }
+                                                                                ]'>
                                     @item.VehicleWeighingStatusName
                                 </button>
                             </div>
