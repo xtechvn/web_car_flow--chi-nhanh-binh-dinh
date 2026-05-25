@@ -1012,9 +1012,9 @@ namespace Repositories.Repositories
                                 ws.Cells["J" + RowIndex].PutValue(item.VehicleWeighingTimeComeIn != null ? item.VehicleWeighingTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "");
                                 ws.Cells["K" + RowIndex].PutValue(item.VehicleWeighingTimeComeOut != null ? item.VehicleWeighingTimeComeOut.Value.ToString("HH:mm dd/MM/yyyy") : "");
                                
-                                ws.Cells["L" + RowIndex].PutValue(item.VehicleLoadTaken != null ? item.VehicleLoadTaken : 0);
+                                ws.Cells["L" + RowIndex].PutValue(item.VehicleWeightIn != null ? item.VehicleWeightIn : 0);
                                 ws.Cells["L" + RowIndex].SetStyle(numberStyle);
-                                ws.Cells["M" + RowIndex].PutValue(item.TotalVehicleTroughWeight != null ? item.TotalVehicleTroughWeight: 0);
+                                ws.Cells["M" + RowIndex].PutValue(item.VehicleWeightOut != null ? item.VehicleWeightOut : 0);
                                 ws.Cells["M" + RowIndex].SetStyle(numberStyle);
                                 ws.Cells["N" + RowIndex].PutValue((item.NetWeight != null ? item.NetWeight.Value : 0).ToString("N0"));
                                 ws.Cells["N" + RowIndex].SetStyle(numberStyle);

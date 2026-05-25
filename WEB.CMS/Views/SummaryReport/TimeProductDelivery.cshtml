@@ -17,7 +17,7 @@
 
     <div class="filter-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 0fr)) !important;">
         <div class="form-group">
-            <select class="form-control" id="loadType" onchange="_detail_summary_report.Seach()" style="min-width:100px; max-width:150px;">
+            <select class="form-control" id="loadType" onchange="time_product_delivery.Seach()" style="min-width:100px; max-width:150px;">
                 <option value="-1">Tất cả</option>
                 @if(LOAD_TYPE!=null && LOAD_TYPE.Count>0){
                     foreach (var item in LOAD_TYPE)
@@ -32,7 +32,7 @@
 
         <div class="form-group">
             <div class="date-picker">
-                <input type="date" id="date_time_Car" max="@date.ToString("yyyy-MM-dd")" onchange="_detail_summary_report.Seach()" value="@date.ToString("yyyy-MM-dd")" style="min-width:100px; max-width:150px;">
+                <input type="date" id="date_time_Car" max="@date.ToString("yyyy-MM-dd")" onchange="time_product_delivery.Seach()" value="@date.ToString("yyyy-MM-dd")" style="min-width:100px; max-width:150px;">
             </div>
             <label for="plant">Ngày</label>
         </div>
