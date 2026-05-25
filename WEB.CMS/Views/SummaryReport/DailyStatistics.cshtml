@@ -29,6 +29,9 @@
             <th>Tình trạng</th>
             <th>Tổng trọng lượng đã lấy(KG)</th>
             <th>CSOS</th>
+            <th>Cân vào(KG)</th>
+            <th>Cân ra(KG)</th>
+            <th>NET WEIGHT(KG)</th>
         </tr>
     </thead>
     <tbody>
@@ -88,7 +91,9 @@
                     </td>
                     <td>@item.TotalVehicleTroughWeight</td>
                     <td>@item.FullName</td>
-
+                    <td>@(item.VehicleWeightIn!= null ? item.VehicleWeightIn.Value.ToString("N0") : "0")</td>
+                    <td>@(item.VehicleWeightOut!= null ? item.VehicleWeightOut.Value.ToString("N0") : "0")</td>
+                    <td>@(item.NetWeight!= null ? item.NetWeight.Value.ToString("N0") : "0")</td>
                 </tr>
             }
         }
@@ -112,6 +117,10 @@
                 <th>Trung bình thời gian xuất hàng/ xe</th>
                 <th>Tổng trọng lượng đã lấy(KG)</th>
                 <th>CSOS</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
             </tr>
             <tr>
                 <td>@TotalData.TotalCar</td>
@@ -130,6 +139,10 @@
                 <td>@TotalData.TotalTimeInHour</td>
                 <td>@TotalData.AvgTimePerCompletedCar_Hour</td>
                 <td>@TotalData.TotalWeightTroughType</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td></td>
             </tr>
             <tr>
@@ -151,6 +164,10 @@
                 <td></td>
 				 <td></td>
 				 <td></td>
+                 <td></td>
+                 <td></td>
+                 <td></td>
+                 <td></td>
             </tr>
 
             <tr>
@@ -172,6 +189,10 @@
                 <td></td>
 				 <td></td>
 				 <td></td>
+                 <td></td>
+                 <td></td>
+                 <td></td>
+                 <td></td>
             </tr>
 
         }

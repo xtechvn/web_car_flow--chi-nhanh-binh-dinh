@@ -12,18 +12,22 @@
             </svg>
         </a>
         <h2 class="table-title">Báo cáo</h2>
-     
+
     </div>
 
     <div class="filter-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 0fr)) !important;">
         <div class="form-group">
             <select class="form-control" id="loadType" onchange="_detail_summary_report.Seach()" style="min-width:100px; max-width:150px;">
                 <option value="-1">Tất cả</option>
-                @foreach (var item in LOAD_TYPE)
+                @if (LOAD_TYPE != null && LOAD_TYPE.Count > 0)
                 {
-                    <option value="@item.CodeValue">@item.Description</option>
+                    foreach (var item in LOAD_TYPE)
+                    {
+                        <option value="@item.CodeValue">@item.Description</option>
 
+                    }
                 }
+                
             </select>
             <label for="plant">Nhóm tài</label>
         </div>

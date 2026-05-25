@@ -505,6 +505,9 @@ namespace Repositories.Repositories
                     ws.Cells["Q1"].PutValue("Tình trạng");
                     ws.Cells["R1"].PutValue("Tổng trọng lượng đã lấy(KG)");
                     ws.Cells["S1"].PutValue("CSOS");
+                    ws.Cells["T1"].PutValue("Cân vào");
+                    ws.Cells["U1"].PutValue("Cân ra");
+                    ws.Cells["V1"].PutValue("NET WEIGHT");
 
 
                     #endregion
@@ -599,6 +602,9 @@ namespace Repositories.Repositories
                                 ws.Cells["Q" + RowIndex].PutValue(TrangThai_name);
                                 ws.Cells["R" + RowIndex].PutValue(item.TotalVehicleTroughWeight);
                                 ws.Cells["S" + RowIndex].PutValue(item.FullName);
+                                ws.Cells["T" + RowIndex].PutValue(item.VehicleWeightIn);
+                                ws.Cells["U" + RowIndex].PutValue(item.VehicleWeightOut);
+                                ws.Cells["V" + RowIndex].PutValue(item.NetWeight);
                          
 
                                 isFirstRow = false;

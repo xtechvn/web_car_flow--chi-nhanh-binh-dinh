@@ -56,8 +56,8 @@
                     <td>@item.Forklift</td>
                     <td>@(item.VehicleWeighingTimeComeIn != null ? item.VehicleWeighingTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "")</td> @*bước 1*@
                     <td>@(item.VehicleWeighingTimeComeOut != null ? item.VehicleWeighingTimeComeOut.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>@*Bước 3*@
-                    <td>@(item.VehicleLoadTaken != null ? item.VehicleLoadTaken.Value.ToString("N0") : "0")</td>
-                    <td>@(item.TotalVehicleTroughWeight!= null ? item.TotalVehicleTroughWeight.Value.ToString("N0") : "0")</td>
+                    <td>@(item.VehicleWeightIn != null ? item.VehicleWeightIn.Value.ToString("N0") : "0")</td>
+                    <td>@(item.VehicleWeightOut!= null ? item.VehicleWeightOut.Value.ToString("N0") : "0")</td>
                     <td>@((item.NetWeight != null ? item.NetWeight.Value : 0).ToString("N0"))</td>
                     <td> @((item.OrderWeight != null ? item.OrderWeight.Value : 0).ToString("N2"))</td>
                     <td>@((item.TotalBag != null ? item.TotalBag.Value : 0).ToString("N2"))</td>
