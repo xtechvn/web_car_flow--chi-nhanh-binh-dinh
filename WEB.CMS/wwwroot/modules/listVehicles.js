@@ -246,13 +246,13 @@ $(document).ready(function () {
 
                 let actionIcons = "";
 
-                var weightInVal = item.vehicleWeightIn !== null && item.vehicleWeightIn > 0 ? item.vehicleWeightIn.toLocaleString('en-US') : "";
+                var weightInVal = item.vehicleWeightIn !== null && item.vehicleWeightIn > 0 ? item.vehicleWeightIn.toLocaleString('en-US') : "0";
                 var weightOutVal = item.vehicleWeightOut !== null && item.vehicleWeightOut > 0 ? item.vehicleWeightOut.toLocaleString('en-US') : "";
-                var netWeightVal = (item.vehicleWeightOut !== null && item.vehicleWeightIn !== null) ? 
+                var netWeightVal = (item.vehicleWeightOut !== null && item.vehicleWeightIn !== null) ?
                     (item.vehicleWeightOut - item.vehicleWeightIn).toLocaleString('en-US') : "";
 
-                var weightOutDisplay = isProcessed ? 
-                    weightOutVal : 
+                var weightOutDisplay = isProcessed ?
+                    weightOutVal :
                     `<input class="VehicleWeightIn" id="VehicleWeightIn_${item.id}" value="${item.vehicleWeightIn || ""}" style="display:none;" />
                      <input type="text" style="width:100%!important"
                             class="input-form currency VehicleWeightOut weight CartoFactory_${item.id} _weight"
@@ -287,6 +287,7 @@ $(document).ready(function () {
                                data-original="${tw.vehicleTroughWeight !== null ? tw.vehicleTroughWeight.toLocaleString('en-US') : ""}"
                                placeholder="Vui lòng nhập" ${isProcessed ? "disabled" : ""} />
                     </td>
+                    <td>${weightInVal}</td>
                     <td>${weightOutDisplay}</td>
                     <td id="NetWeight_${item.id}">${netWeightVal}</td>
                     <td>
@@ -313,6 +314,7 @@ $(document).ready(function () {
                         </div>
                     </div>
                 </td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -367,7 +369,7 @@ $(document).ready(function () {
         if (tbody) {
             tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
             sortTable_Da_SL();
-            _listVehicles.autoRowspanWithCondition("ListCarCall-1", [0, 1, 2, 3, 4, 5, 8, 9, 10], [0, 1, 2, 3, 4],5);
+            _listVehicles.autoRowspanWithCondition("ListCarCall-1", [0, 1, 2, 3, 4, 5, 8, 9, 10, 11], [0, 1, 2, 3, 4, 5]);
         }
     });
 
@@ -378,7 +380,7 @@ $(document).ready(function () {
         if (tbody) {
             tbody.insertAdjacentHTML("beforeend", renderRow(item, false));
             sortTable();
-            _listVehicles.autoRowspanWithCondition("ListCarCall-0", [0, 1, 2, 3, 4, 5, 8, 9, 10], [0, 1, 2, 3, 4,5]);
+            _listVehicles.autoRowspanWithCondition("ListCarCall-0", [0, 1, 2, 3, 4, 5, 8, 9, 10, 11], [0, 1, 2, 3, 4, 5]);
         }
     });
 
@@ -390,7 +392,7 @@ $(document).ready(function () {
         if (tbody) {
             tbody.insertAdjacentHTML("beforeend", renderRow(item, false));
             sortTable();
-            _listVehicles.autoRowspanWithCondition("ListCarCall-0", [0, 1, 2, 3, 4, 5, 8, 9, 10], [0, 1, 2, 3, 4,5]);
+            _listVehicles.autoRowspanWithCondition("ListCarCall-0", [0, 1, 2, 3, 4, 5, 8, 9, 10, 11], [0, 1, 2, 3, 4, 5]);
         }
     });
 
@@ -650,7 +652,7 @@ var _listVehicles = {
         $.ajax({
             url: "/Car/UpdateVehicleWeightOut",
             type: "post",
-            data: { id: id,VehicleWeightOut: vehicleWeightOut },
+            data: { id: id, VehicleWeightOut: vehicleWeightOut },
             success: function (result) {
                 status_type = result.status;
                 if (result.status == 0) {

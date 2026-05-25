@@ -31,6 +31,7 @@
                 <th>Ghi chú</th>
                 <th>Máng xuất</th>
                 <th>Trọng lượng (kg)</th>
+                <th>Tải trọng cân vào (kg)</th>
                 <th>Tải trọng cân ra (kg)</th>
                 <th>NET WEIGHT (kg)</th>
                 <th>Tình Trạng</th>
@@ -88,6 +89,9 @@
 
                             </td>
                             <td>
+                                @(item.VehicleWeightIn != null ? ((decimal)item.VehicleWeightIn).ToString("N0") : "0")
+                            </td>
+                            <td>
                                 <input class="VehicleWeightIn" id="VehicleWeightIn_@item.Id" value="@(item.VehicleWeightIn != null ? item.VehicleWeightIn:0)" style="display:none;" />
                                 <input type="text" style="width:100%!important"
                                        class="input-form currency VehicleWeightOut weight CartoFactory_@item.Id _weight @(ViewBag.type == 1 ? "disabled" : "")"
@@ -137,6 +141,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
+                        <td></td>
                         <td>
                             <div class="status-dropdown">
                                 <button class="dropdown-toggle " data-options='[
@@ -171,6 +176,7 @@ else
                 <th>Ghi chú</th>
                 <th>Máng xuất</th>
                 <th>Trọng lượng (kg)</th>
+                <th>Tải trọng cân vào (kg)</th>
                 <th>Tải trọng cân ra (kg)</th>
                 <th>NET WEIGHT (kg)</th>
                 <th>Tình Trạng</th>
@@ -183,5 +189,5 @@ else
 
 <script>
     // Gộp cột nếu có nhiều dòng chung 1 xe
-    _listVehicles.autoRowspanWithCondition("ListCarCall-" + @ViewBag.type, [0, 1, 2, 3, 4,5, 8,9,10], [0, 1, 2, 3, 4,5]);
+    _listVehicles.autoRowspanWithCondition("ListCarCall-" + @ViewBag.type, [0, 1, 2, 3, 4, 5, 8, 9, 10,11], [0, 1, 2, 3, 4, 5]);
 </script>
