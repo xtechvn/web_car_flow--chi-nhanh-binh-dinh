@@ -7,7 +7,9 @@ let revenuChartInstance_KhungGio = null;
 let revenuChartInstance_mang = null;
 var _summary_report = {
     init: function () {
-        var datetime = null;
+        var date = new Date();
+        var datetime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0).toLocaleDateString("en-GB");
+           
        /* _summary_report.GetDailyStatistics(datetime)*/
         _summary_report.GetTotalWeightByHour(datetime);
         _summary_report.GetProductivityStatistics(datetime);
